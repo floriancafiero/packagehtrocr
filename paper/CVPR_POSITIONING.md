@@ -93,6 +93,34 @@ Implication:
 - downstream utility/factual correctness beyond CER is established;
 - our contribution should not be "semantic utility matters."
 
+### Historical-fidelity evaluation of VLM OCR
+
+**Levchenko (LM4DH 2025)**  
+Evaluates 12 multimodal LLMs on 18th-century Russian print and introduces
+Historical Character Preservation Rate (HCPR) and Archaic Insertion Rate (AIR).
+The paper demonstrates "over-historicization", where models insert archaic
+characters from the wrong historical period, and includes contamination/stability
+analysis.
+
+Implication:
+- historical/diplomatic fidelity is already an explicit evaluation target;
+- we cannot claim to be first to show that CER/WER miss historical-fidelity
+  failures;
+- our contribution must generalize beyond a period-specific character inventory
+  to source-grounded error attribution across languages/scripts and model
+  families.
+
+**HIPE-OCRepair 2026**  
+Uses cMER/wMER, micro/macro aggregation, confidence intervals and a preference
+score against raw OCR; the shared task explicitly documents over-correction by
+LLM post-correctors.
+
+Implication:
+- micro/macro aggregation, uncertainty and over-correction are established;
+- the key distinction is that HIPE-OCRepair is text-only post-correction and
+  retrieval-oriented, whereas our difficult labels are conditioned on the
+  original source image and target visual transcription fidelity.
+
 ### Generative document parsing evaluation
 
 **SCORE (2025)**  
@@ -118,7 +146,9 @@ Implication:
 
 ## The defensible gap
 
-The gap is the intersection of three things that existing work treats separately:
+The gap is therefore narrower than initially expected. It is the intersection
+of three things that existing work has not yet combined in a general
+source-grounded visual-transcription benchmark:
 
 ### 1. Visual transcription fidelity
 
