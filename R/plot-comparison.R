@@ -34,6 +34,11 @@ plot_comparison <- function(x, percent = TRUE) {
   plot_data$difference_plot <- plot_data$difference_b_minus_a * multiplier
   plot_data$conf_low_plot <- plot_data$conf_low * multiplier
   plot_data$conf_high_plot <- plot_data$conf_high * multiplier
+  plot_data$comparison <- paste0(
+    plot_data$system_b,
+    " - ",
+    plot_data$system_a
+  )
 
   axis_label <- if (isTRUE(percent)) {
     "Difference in error rate (B - A), percentage points"
@@ -52,14 +57,10 @@ plot_comparison <- function(x, percent = TRUE) {
     ) +
     ggplot2::geom_point(size = 2.5) +
     ggplot2::coord_flip() +
+    ggplot2::facet_wrap("comparison") +
     ggplot2::labs(
       x = NULL,
-      y = axis_label,
-      subtitle = paste0(
-        unique(plot_data$system_b),
-        " - ",
-        unique(plot_data$system_a)
-      )
+      y = axis_label
     ) +
     ggplot2::theme_minimal()
 }
