@@ -1,0 +1,3 @@
+Transcribe the handwritten text in this line image.
+Do not record allographic variants; use standard letter forms.
+Output ONLY the transcription.
