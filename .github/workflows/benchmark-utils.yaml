@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - "benchmark/**"
+      - "python/**"
       - ".github/workflows/benchmark-utils.yaml"
   pull_request:
     branches: [main]
     paths:
       - "benchmark/**"
+      - "python/**"
       - ".github/workflows/benchmark-utils.yaml"
 
 permissions: read-all
@@ -31,6 +33,75 @@ jobs:
 
       - name: Test benchmark utilities
         run: python -m unittest discover -s benchmark/tests -p "test_*.py" -v
+
+  python-policy-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python package
+        run: python -m pip install -e "python[dev]"
+
+      - name: Build synthetic prediction inputs
+        shell: bash
+        run: |
+          mkdir -p tmp_py_policy
+          cat > tmp_py_policy/predictions.csv <<'CSV'
+          document_id,line_id,system,reference,prediction
+          d1,l1,qwen_neutral,olde,old
+          d1,l1,qwen_matched,olde,olde
+          d1,l2,qwen_neutral,colour,color
+          d1,l2,qwen_matched,colour,colour
+          d2,l3,qwen_neutral,teh,the
+          d2,l3,qwen_matched,teh,teh
+          d2,l4,qwen_neutral,abc,abc
+          d2,l4,qwen_matched,abc,abd
+          CSV
+
+          cat > tmp_py_policy/systems.csv <<'CSV'
+          system,model,model_family,prompt_policy,prompt_condition,model_id,revision,prompt_file
+          qwen_neutral,Qwen,general_vlm,neutral,neutral,test/model,abc123,neutral.txt
+          qwen_matched,Qwen,general_vlm,matched,matched,test/model,abc123,matched.txt
+          CSV
+
+      - name: Run Python policy swap
+        run: |
+          python benchmark/run_policy_swap.py             tmp_py_policy/predictions.csv             tmp_py_policy/systems.csv             tmp_py_policy/results
+
+      - name: Build Python blinded preference batch
+        run: |
+          python benchmark/make_policy_preference_batch.py             tmp_py_policy/results/policy_changed_outputs.csv             tmp_py_policy/batch             --n 4
+
+      - name: Complete synthetic Python annotations
+        run: |
+          python - <<'PY'
+          import pandas as pd
+          path = "tmp_py_policy/batch/policy_preference_items_blinded.csv"
+          x = pd.read_csv(path)
+          labels = ["A", "B", "tie", "ambiguous"]
+          x["preferred_output"] = [labels[i % len(labels)] for i in range(len(x))]
+          x["annotator"] = "tester"
+          x["confidence"] = 3
+          x.to_csv("tmp_py_policy/completed.csv", index=False)
+          PY
+
+      - name: Analyze Python blinded preferences
+        run: |
+          python benchmark/analyze_policy_preferences.py             tmp_py_policy/completed.csv             tmp_py_policy/batch/policy_preference_key_private.csv             tmp_py_policy/analysis
+
+      - name: Check Python expected outputs
+        shell: bash
+        run: |
+          test -s tmp_py_policy/results/policy_swap_summary.csv
+          test -s tmp_py_policy/results/policy_changed_outputs.csv
+          test -s tmp_py_policy/batch/policy_preference_items_blinded.csv
+          test -s tmp_py_policy/analysis/policy_preference_summary.csv
+          test -s tmp_py_policy/analysis/human_vs_cer_relation.csv
 
   r-policy-annotation-smoke-test:
     runs-on: ubuntu-latest
