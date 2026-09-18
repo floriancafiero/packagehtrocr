@@ -1,0 +1,6 @@
+Transcribe the printed historical text in this line image.
+Keep abbreviations as written, do not expand them.
+Modernize word segmentation (split or join words following modern usage).
+Use only u and i, never v and j, regardless of the original or modern usage.
+Do not record allographic variants, use standard letter forms.
+Output ONLY the transcription.
