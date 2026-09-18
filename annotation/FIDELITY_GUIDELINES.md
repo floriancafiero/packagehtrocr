@@ -99,6 +99,14 @@ visible abbreviation relative to the reference transcription convention.
 Do not mark a difference as erroneous merely because another transcription
 convention would also be reasonable. Follow the benchmark's stated convention.
 
+### `segmentation_policy_change`
+
+Use when the prediction splits or joins words/tokens differently from the
+reference **and that difference conflicts with the declared target convention**.
+
+This category matters because some transcription policies deliberately
+modernize word segmentation while others preserve source segmentation.
+
 ### `unsupported_completion`
 
 Use when the image is damaged, occluded, cropped, faint, or otherwise
@@ -138,7 +146,8 @@ For each error span:
    linguistic representation?**
    - historical/variant spelling → `orthographic_normalization`;
    - probable correction → `linguistic_correction`;
-   - abbreviation convention → `abbreviation_change`.
+   - abbreviation convention → `abbreviation_change`;
+   - word/token boundaries → `segmentation_policy_change`.
 5. Otherwise → `visual_misrecognition`.
 6. If none is defensible → `other` or `ambiguous`.
 
