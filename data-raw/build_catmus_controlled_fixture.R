@@ -52,10 +52,10 @@ exact <- make_variant(
   identity
 )
 
-nfd_equivalent <- make_variant(
+nfc_equivalent <- make_variant(
   source_data,
-  "nfd_equivalent",
-  stringi::stri_trans_nfd
+  "nfc_equivalent",
+  stringi::stri_trans_nfc
 )
 
 punctuation_dropped <- make_variant(
@@ -68,7 +68,7 @@ punctuation_dropped <- make_variant(
 
 controlled <- rbind(
   exact,
-  nfd_equivalent,
+  nfc_equivalent,
   punctuation_dropped
 )
 
