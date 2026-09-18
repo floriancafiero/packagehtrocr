@@ -8,6 +8,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 SUBSET_PATH = ROOT / "gt4histocr" / "build_subset.py"
 JOIN_PATH = ROOT / "gt4histocr" / "join_predictions.py"
+PREPARE_PATH = ROOT / "gt4histocr" / "prepare_docworkflow.py"
 
 
 def load_module(name, path):
@@ -19,6 +20,7 @@ def load_module(name, path):
 
 subset = load_module("gt4_subset", SUBSET_PATH)
 joiner = load_module("gt4_join", JOIN_PATH)
+preparer = load_module("gt4_prepare", PREPARE_PATH)
 
 
 class GT4HistOCRUtilitiesTest(unittest.TestCase):
@@ -54,10 +56,17 @@ class GT4HistOCRUtilitiesTest(unittest.TestCase):
                         f"{document} {i}",
                         encoding="utf-8",
                     )
+                    # Minimal valid PNG header + IHDR dimensions.
+                    import struct
+                    png = (
+                        b"\\x89PNG\\r\\n\\x1a\\n"
+                        + b"\\x00\\x00\\x00\\x0dIHDR"
+                        + struct.pack(">II", 100, 20)
+                    )
                     (
                         directory
                         / f"{base}.nrm.png"
-                    ).write_bytes(b"fixture")
+                    ).write_bytes(png)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -192,6 +201,59 @@ class GT4HistOCRUtilitiesTest(unittest.TestCase):
             len(systems),
             2,
         )
+
+    def test_prepare_docworkflow_contains_no_ground_truth_text(self):
+        rows = subset.scan_pairs(self.root)
+        selected = subset.balanced_sample(
+            rows,
+            per_subcorpus=1,
+            max_per_document=1,
+            seed=2027,
+        )
+
+        output = (
+            Path(self.tmp.name)
+            / "prepared"
+        )
+        generated = preparer.prepare(
+            root=self.root,
+            manifest_rows=selected,
+            output=output,
+            mode="copy",
+        )
+
+        self.assertEqual(
+            len(generated),
+            len(selected),
+        )
+
+        import xml.etree.ElementTree as ET
+
+        for row in selected:
+            xml_path = (
+                output
+                / f"{row['line_id']}.xml"
+            )
+            tree = ET.parse(xml_path)
+            xml_text = ET.tostring(
+                tree.getroot(),
+                encoding="unicode",
+            )
+
+            self.assertNotIn(
+                row["reference"],
+                xml_text,
+            )
+            self.assertIn(
+                row["line_id"],
+                xml_text,
+            )
+            self.assertTrue(
+                (
+                    output
+                    / f"{row['line_id']}.png"
+                ).exists()
+            )
 
 
 if __name__ == "__main__":
