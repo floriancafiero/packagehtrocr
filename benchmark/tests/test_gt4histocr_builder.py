@@ -59,8 +59,10 @@ class GT4HistOCRUtilitiesTest(unittest.TestCase):
                     # Minimal valid PNG header + IHDR dimensions.
                     import struct
                     png = (
-                        b"\\x89PNG\\r\\n\\x1a\\n"
-                        + b"\\x00\\x00\\x00\\x0dIHDR"
+                        bytes.fromhex(
+                            "89504e470d0a1a0a"
+                            "0000000d49484452"
+                        )
                         + struct.pack(">II", 100, 20)
                     )
                     (
