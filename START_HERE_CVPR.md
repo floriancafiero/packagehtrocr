@@ -5,6 +5,7 @@ If you only read one file, read this one.
 ## What is already ready
 
 The repository already contains:
+- parallel R and Python evaluation packages;
 - evaluation code;
 - policy-swap analysis;
 - CMMHWR and GT4 table builders;
@@ -52,11 +53,32 @@ Follow:
 
 ### 6. Run policy analysis
 
+R:
+
 ```bash
 Rscript benchmark/run_policy_swap.R \
   benchmark/cmmhwr/cmmhwr_predictions.csv \
   benchmark/cmmhwr/SYSTEMS_POLICY_LOCKED.csv \
   benchmark/cmmhwr/policy_results
+```
+
+Or Python:
+
+```bash
+pip install -e "python[dev]"
+
+python benchmark/run_policy_swap.py \
+  benchmark/cmmhwr/cmmhwr_predictions.csv \
+  benchmark/cmmhwr/SYSTEMS_POLICY_LOCKED.csv \
+  benchmark/cmmhwr/policy_results_python
+```
+
+For the complete Python benchmark analysis:
+
+```bash
+python benchmark/cmmhwr/run_analysis.py \
+  benchmark/cmmhwr/cmmhwr_predictions.csv \
+  benchmark/cmmhwr/analysis_python
 ```
 
 ### 7. Decide whether the CVPR hypothesis is alive
@@ -77,3 +99,17 @@ If no, stop spending compute on the CVPR version and redirect to ICDAR/R Journal
 
 See:
 `TODO_CVPR.md`
+
+
+## Python-only collaborator path
+
+A collaborator who does not use R can work entirely through Python:
+
+1. `pip install -e "python[dev]"`
+2. build/join frozen predictions with the existing Python benchmark utilities;
+3. run `benchmark/cmmhwr/run_analysis.py`;
+4. run `benchmark/run_policy_swap.py`;
+5. create the blinded pilot with `benchmark/make_policy_preference_batch.py`;
+6. analyze completed annotations with `benchmark/analyze_policy_preferences.py`.
+
+The R and Python core metric implementations are checked for parity in CI.
