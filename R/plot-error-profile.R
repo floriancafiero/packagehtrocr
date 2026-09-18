@@ -65,13 +65,13 @@ plot_error_profile <- function(x, group = NULL, percent = TRUE) {
   ggplot2::ggplot(
     plot_data,
     ggplot2::aes(
-      x = group_value,
-      y = rate,
-      fill = error_type
+      x = .data[["group_value"]],
+      y = .data[["rate"]],
+      fill = .data[["error_type"]]
     )
   ) +
     ggplot2::geom_col(position = "dodge") +
-    ggplot2::facet_wrap(ggplot2::vars(metric)) +
+    ggplot2::facet_wrap("metric") +
     ggplot2::labs(
       x = if (is.null(group)) NULL else group,
       y = axis_label,
