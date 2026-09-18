@@ -6,14 +6,22 @@ These annotations characterize *why* a recognition output differs from a
 reference transcription. They are designed for comparing specialized OCR/HTR
 systems with generative VLMs.
 
-The annotation question is deliberately source-aware:
+The annotation question is deliberately source-aware **and protocol-conditioned**:
 
-> **Given the image, the reference transcription, and the system output, what
-> best explains this difference as a transcription error?**
+> **Given the image, the target transcription convention, the reference
+> transcription, and the system output, what best explains this difference as a
+> transcription error?**
+
+"Fidelity" does not mean reproducing every visible glyph literally. A benchmark
+may deliberately normalize allographs, expand or preserve abbreviations, or
+modernize word segmentation. Such transformations are correct when required by
+the declared target convention.
 
 Do not judge whether the prediction is linguistically elegant, semantically
 plausible, or useful downstream. Judge whether it is faithful to the visible
-source under the stated transcription convention.
+source **under the stated transcription convention**. A normalization or
+correction label applies only when the system goes beyond what that convention
+licenses.
 
 ## Blinding
 
