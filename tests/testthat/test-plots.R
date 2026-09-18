@@ -24,3 +24,19 @@ test_that("plot_error_profile returns a ggplot", {
   p <- plot_error_profile(x, group = "system")
   expect_s3_class(p, "ggplot")
 })
+
+
+test_that("plot_comparison supports several system pairs", {
+  x <- data.frame(
+    metric = c("cer", "cer", "cer"),
+    system_a = c("A", "A", "B"),
+    system_b = c("B", "C", "C"),
+    difference_b_minus_a = c(-0.01, 0.02, 0.03),
+    conf_low = c(-0.02, 0.01, 0.01),
+    conf_high = c(0, 0.03, 0.05)
+  )
+
+  p <- plot_comparison(x)
+  expect_s3_class(p, "ggplot")
+  expect_equal(length(unique(p$data$comparison)), 3)
+})
