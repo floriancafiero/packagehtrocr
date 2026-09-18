@@ -18,7 +18,7 @@ test_that("evaluate_recognition returns long-form metrics", {
 
   expect_equal(nrow(x), 4)
   expect_true(all(c(
-    "line_id", "system", "metric", "rate",
+    "line_id", "system", "reference", "prediction", "metric", "rate",
     "substitutions", "deletions", "insertions"
   ) %in% names(x)))
 })
@@ -27,4 +27,18 @@ test_that("evaluate_recognition handles empty data", {
   d <- data.frame(reference = character(), prediction = character())
   x <- evaluate_recognition(d, reference, prediction)
   expect_equal(nrow(x), 0)
+})
+
+
+test_that("text retention can be disabled explicitly", {
+  d <- data.frame(reference = "abc", prediction = "axc")
+  x <- evaluate_recognition(
+    d,
+    reference,
+    prediction,
+    metrics = "cer",
+    keep_text = FALSE
+  )
+  expect_false("reference" %in% names(x))
+  expect_false("prediction" %in% names(x))
 })
