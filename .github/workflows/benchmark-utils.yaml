@@ -1,0 +1,33 @@
+name: Benchmark utilities
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "benchmark/**"
+      - ".github/workflows/benchmark-utils.yaml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "benchmark/**"
+      - ".github/workflows/benchmark-utils.yaml"
+
+permissions: read-all
+
+concurrency:
+  group: benchmark-utils-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-benchmark-utils:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Test benchmark utilities
+        run: python -m unittest discover -s benchmark/tests -p "test_*.py" -v
