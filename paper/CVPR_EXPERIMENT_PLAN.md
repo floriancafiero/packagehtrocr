@@ -93,19 +93,37 @@ One row per line × system:
 Before novel analysis, reproduce official aggregate CER/WER closely enough to
 validate line extraction, Unicode policy, and model inference.
 
-## Benchmark B — second domain
+## Benchmark B — GT4HistOCR historical print
 
-Needed for a strong CVPR submission.
+Use **GT4HistOCR** as the primary second domain.
 
-Preferred options, in order:
+Why:
+- 313,173 printed line-image/transcription pairs;
+- German Fraktur and Early Modern Latin;
+- 15th–19th century material;
+- diplomatic-style transcriptions preserving historical character forms;
+- CC-BY 4.0;
+- print rather than handwriting, giving a genuine visual-domain shift from
+  CMMHWR26;
+- not listed among the MEDUSA 0.1 training datasets.
 
-1. modern/printed OCR benchmark with line-level references and easy inference;
-2. modern handwritten benchmark with public images/GT;
-3. selected CC-OCR/OmniDocBench text-reading subset if output alignment can be
-   made clean and reproducible.
+Use a pre-specified held-out subset spanning printing periods/scripts rather than
+the full corpus if inference cost is high.
 
-The second benchmark should test whether findings generalize beyond historical
-manuscripts, not simply add volume.
+Candidate systems:
+- Tesseract or an OCR-D/Calamari historical-print recognizer;
+- MEDUSA-4B/9B as out-of-domain visual transcription models;
+- the same additional general VLM used on CMMHWR26.
+
+This benchmark is especially useful for source-fidelity categories because
+Fraktur, historical spellings, and diplomatic character forms create cases where
+language-prior normalization can be distinguished from literal recognition.
+
+Optional third-domain validation:
+- IAM or another modern handwriting dataset if time permits.
+
+The second benchmark must test whether findings generalize beyond medieval
+handwriting, not simply add more historical pages.
 
 ## Fidelity annotation study
 
