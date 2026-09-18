@@ -4,7 +4,9 @@
 #' bootstrap resamples complete higher-level units (for example manuscripts),
 #' preserving the dependence among lines from the same unit.
 #'
-#' @param x Evaluation output from [evaluate_recognition()].
+#' @param x Evaluation output from [evaluate_recognition()]. The original
+#'   reference text must be present (the default when `keep_text = TRUE`) so
+#'   paired comparisons can verify identical ground truth across systems.
 #' @param systems Character vector naming exactly two system levels, in the
 #'   order A, B. The reported difference is B - A, so negative values mean
 #'   system B has the lower error rate.
@@ -56,7 +58,7 @@ compare_systems <- function(
   }
 
   required <- c(
-    "metric", "n_reference", "n_hypothesis",
+    "metric", "reference", "n_reference", "n_hypothesis",
     "substitutions", "deletions", "insertions", "distance"
   )
   missing_required <- setdiff(required, names(x))
@@ -164,6 +166,16 @@ compare_systems <- function(
     }
 
     b <- b[match(key_a, key_b), , drop = FALSE]
+
+    if (!identical(as.character(a$reference), as.character(b$reference))) {
+      stop(
+        sprintf(
+          "Reference texts differ between systems for at least one paired observation in metric %s.",
+          metric_name
+        ),
+        call. = FALSE
+      )
+    }
 
     if (!all(a$n_reference == b$n_reference)) {
       stop(
