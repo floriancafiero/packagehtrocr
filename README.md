@@ -1,10 +1,23 @@
 # ocrinfer
 
-Experimental R package for **statistically explicit evaluation of OCR and handwritten text recognition (HTR)**.
+R **and Python** toolkit for statistically explicit evaluation of OCR and handwritten text recognition (HTR).
 
 The package name `ocrinfer` is provisional. The repository now supports a **CVPR 2027 project on transcription-policy compliance in generative OCR/HTR**; a later R Journal software paper remains a secondary objective.
 
-The package does **not** run OCR/HTR models. It starts from reference transcriptions and recognition outputs and asks how recognition quality should be measured, aggregated, compared, and diagnosed.
+The toolkit does **not** run OCR/HTR models. It starts from reference transcriptions and recognition outputs and asks how recognition quality should be measured, aggregated, compared, and diagnosed.
+
+The repository contains two implementations of the core analysis:
+
+- the R package in the repository root;
+- a pip-installable Python package under `python/`.
+
+Install Python with:
+
+```bash
+pip install -e "python[dev]"
+```
+
+The Python API mirrors the R workflow (`evaluate_recognition`, `summarize_recognition`, `compare_systems`, `policy_swap_summary`, error spans and fidelity annotation). Cross-language CI checks R/Python agreement on frozen fixtures.
 
 The current research experiment additionally treats the **target transcription
 policy** as a controlled variable: the same VLM and image are evaluated under
