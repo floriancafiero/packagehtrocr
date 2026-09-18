@@ -1,0 +1,8 @@
+system,model,model_family,prompt_policy,prompt_condition,model_id,revision,prompt_file
+medusa4b_neutral,MEDUSA-4B,specialized_vlm,neutral,neutral,ENC-PSL/Medusa0.1Line-4B,TO_FREEZE,benchmark/prompts/gt4_neutral.txt
+medusa4b_diplomatic,MEDUSA-4B,specialized_vlm,diplomatic,matched,ENC-PSL/Medusa0.1Line-4B,TO_FREEZE,benchmark/prompts/gt4_diplomatic.txt
+medusa4b_catmus,MEDUSA-4B,specialized_vlm,catmus,conflicting,ENC-PSL/Medusa0.1Line-4B,TO_FREEZE,benchmark/prompts/gt4_catmus.txt
+qwen4b_neutral,Qwen3-VL-4B-Instruct,general_vlm,neutral,neutral,Qwen/Qwen3-VL-4B-Instruct,TO_FREEZE,benchmark/prompts/gt4_neutral.txt
+qwen4b_diplomatic,Qwen3-VL-4B-Instruct,general_vlm,diplomatic,matched,Qwen/Qwen3-VL-4B-Instruct,TO_FREEZE,benchmark/prompts/gt4_diplomatic.txt
+qwen4b_catmus,Qwen3-VL-4B-Instruct,general_vlm,catmus,conflicting,Qwen/Qwen3-VL-4B-Instruct,TO_FREEZE,benchmark/prompts/gt4_catmus.txt
+medusa9b_diplomatic,MEDUSA-9B,specialized_vlm,diplomatic,matched,ENC-PSL/Medusa0.1Line-9B,TO_FREEZE,benchmark/prompts/gt4_diplomatic.txt
