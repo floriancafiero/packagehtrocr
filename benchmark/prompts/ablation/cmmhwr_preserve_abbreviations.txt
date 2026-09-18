@@ -1,0 +1,3 @@
+Transcribe the handwritten text in this line image.
+Keep abbreviations as written; do not expand them.
+Output ONLY the transcription.
