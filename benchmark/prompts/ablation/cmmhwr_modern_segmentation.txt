@@ -1,0 +1,3 @@
+Transcribe the handwritten text in this line image.
+Modernize word segmentation: split or join words following modern usage.
+Output ONLY the transcription.
