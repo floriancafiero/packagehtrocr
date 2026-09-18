@@ -31,3 +31,53 @@ jobs:
 
       - name: Test benchmark utilities
         run: python -m unittest discover -s benchmark/tests -p "test_*.py" -v
+
+  r-policy-annotation-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Build synthetic changed-output table
+        shell: bash
+        run: |
+          mkdir -p tmp_policy
+          cat > tmp_policy/changed.csv <<'CSV'
+          model,condition_a,condition_b,system_a,system_b,document_id,line_id,reference,prediction_a,prediction_b,target_rate_a,target_rate_b,target_delta_b_minus_a
+          Qwen,neutral,matched,qwen_neutral,qwen_matched,d1,l1,olde,old,olde,0.25,0,-0.25
+          Qwen,neutral,matched,qwen_neutral,qwen_matched,d1,l2,colour,color,colour,0.1667,0,-0.1667
+          Qwen,neutral,matched,qwen_neutral,qwen_matched,d2,l3,teh,the,teh,0.3333,0,-0.3333
+          Qwen,neutral,matched,qwen_neutral,qwen_matched,d2,l4,abc,abc,abd,0,0.3333,0.3333
+          CSV
+
+      - name: Build blinded preference batch
+        run: |
+          Rscript benchmark/make_policy_preference_batch.R             tmp_policy/changed.csv tmp_policy/batch 4
+
+      - name: Complete synthetic annotations
+        run: |
+          Rscript -e '
+            x <- read.csv("tmp_policy/batch/policy_preference_items_blinded.csv",
+                          stringsAsFactors = FALSE)
+            x$preferred_output <- c("A", "B", "tie", "ambiguous")[seq_len(nrow(x))]
+            x$annotator <- "tester"
+            x$confidence <- 3L
+            write.csv(x, "tmp_policy/completed.csv", row.names = FALSE)
+          '
+
+      - name: Analyze blinded preferences
+        run: |
+          Rscript benchmark/analyze_policy_preferences.R             tmp_policy/completed.csv             tmp_policy/batch/policy_preference_key_private.csv             tmp_policy/analysis
+
+      - name: Check expected outputs
+        shell: bash
+        run: |
+          test -s tmp_policy/batch/policy_preference_items_blinded.csv
+          test -s tmp_policy/batch/policy_preference_key_private.csv
+          test -s tmp_policy/analysis/policy_preference_summary.csv
+          test -s tmp_policy/analysis/human_vs_cer_relation.csv
