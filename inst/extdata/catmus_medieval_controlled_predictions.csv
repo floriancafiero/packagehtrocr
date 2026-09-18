@@ -1,0 +1,64 @@
+line_id,document_id,century,script_type,language,gen_split,system,reference,prediction
+catmus_001,"Paris, BnF, esp. 480",13,Semihybrida,Castilian,test,exact,q̃ y paresçio. ffecha ⁊ signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan. ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez ⁊,q̃ y paresçio. ffecha ⁊ signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan. ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez ⁊
+catmus_001,"Paris, BnF, esp. 480",13,Semihybrida,Castilian,test,nfd_equivalent,q̃ y paresçio. ffecha ⁊ signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan. ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez ⁊,q̃ y paresçio. ffecha ⁊ signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan. ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez ⁊
+catmus_001,"Paris, BnF, esp. 480",13,Semihybrida,Castilian,test,punctuation_dropped,q̃ y paresçio. ffecha ⁊ signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan. ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez ⁊,q̃ y paresçio ffecha  signada por man de domĩgo ffeĩrs escrͥuan publico de Burgos del rregistͦ de pͦ m̃z escͥuan ffizierõ abenẽçia en esta maña q̃los dich̃s Sanch̃ ꝑez 
+catmus_002,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,exact,cõplimos cipes como deuem seer nansos et atemprados contͣ,cõplimos cipes como deuem seer nansos et atemprados contͣ
+catmus_002,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,nfd_equivalent,cõplimos cipes como deuem seer nansos et atemprados contͣ,cõplimos cipes como deuem seer nansos et atemprados contͣ
+catmus_002,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,punctuation_dropped,cõplimos cipes como deuem seer nansos et atemprados contͣ,cõplimos cipes como deuem seer nansos et atemprados contͣ
+catmus_003,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,exact,delantre q̃la quebrantare ⁊ q̃ la nõ quisiere guarda⟦r⟧ sea ordon⟦a⟧,delantre q̃la quebrantare ⁊ q̃ la nõ quisiere guarda⟦r⟧ sea ordon⟦a⟧
+catmus_003,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,nfd_equivalent,delantre q̃la quebrantare ⁊ q̃ la nõ quisiere guarda⟦r⟧ sea ordon⟦a⟧,delantre q̃la quebrantare ⁊ q̃ la nõ quisiere guarda⟦r⟧ sea ordon⟦a⟧
+catmus_003,"Paris, BnF, esp. 256",13,Textualis,Castilian,test,punctuation_dropped,delantre q̃la quebrantare ⁊ q̃ la nõ quisiere guarda⟦r⟧ sea ordon⟦a⟧,delantre q̃la quebrantare  q̃ la nõ quisiere guardar sea ordona
+catmus_004,"Salamanca, Biblioteca Histórica USAL, 2011",14,Cursiva,Castilian,test,exact,E Regnosu fiio Ioram ensu logare &,E Regnosu fiio Ioram ensu logare &
+catmus_004,"Salamanca, Biblioteca Histórica USAL, 2011",14,Cursiva,Castilian,test,nfd_equivalent,E Regnosu fiio Ioram ensu logare &,E Regnosu fiio Ioram ensu logare &
+catmus_004,"Salamanca, Biblioteca Histórica USAL, 2011",14,Cursiva,Castilian,test,punctuation_dropped,E Regnosu fiio Ioram ensu logare &,E Regnosu fiio Ioram ensu logare 
+catmus_005,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,exact,plazar aotros/.,plazar aotros/.
+catmus_005,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,nfd_equivalent,plazar aotros/.,plazar aotros/.
+catmus_005,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,punctuation_dropped,plazar aotros/.,plazar aotros
+catmus_006,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,exact,nan cartas dela ṅra,nan cartas dela ṅra
+catmus_006,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,nfd_equivalent,nan cartas dela ṅra,nan cartas dela ṅra
+catmus_006,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,punctuation_dropped,nan cartas dela ṅra,nan cartas dela ṅra
+catmus_007,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,exact,i maliçiosa,i maliçiosa
+catmus_007,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,nfd_equivalent,i maliçiosa,i maliçiosa
+catmus_007,"San Lorenzo de El Escorial, RBME, Z-III-9",14,Cursiva,Castilian,test,punctuation_dropped,i maliçiosa,i maliçiosa
+catmus_008,"Madrid, BNE, MSS. 6406",14,Hybrida,Castilian,test,exact,caualłos ⁊ fiios dalgo ⁊ conceios ⁊ om̃s bonos dłas çibdades,caualłos ⁊ fiios dalgo ⁊ conceios ⁊ om̃s bonos dłas çibdades
+catmus_008,"Madrid, BNE, MSS. 6406",14,Hybrida,Castilian,test,nfd_equivalent,caualłos ⁊ fiios dalgo ⁊ conceios ⁊ om̃s bonos dłas çibdades,caualłos ⁊ fiios dalgo ⁊ conceios ⁊ om̃s bonos dłas çibdades
+catmus_008,"Madrid, BNE, MSS. 6406",14,Hybrida,Castilian,test,punctuation_dropped,caualłos ⁊ fiios dalgo ⁊ conceios ⁊ om̃s bonos dłas çibdades,caualłos  fiios dalgo  conceios  om̃s bonos dłas çibdades
+catmus_009,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,exact,q̈nto entra de lo ageno entregue lo,q̈nto entra de lo ageno entregue lo
+catmus_009,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,nfd_equivalent,q̈nto entra de lo ageno entregue lo,q̈nto entra de lo ageno entregue lo
+catmus_009,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,punctuation_dropped,q̈nto entra de lo ageno entregue lo,q̈nto entra de lo ageno entregue lo
+catmus_010,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,exact,⁊en pod̾ ⁊ en paz. si el forçador algun,⁊en pod̾ ⁊ en paz. si el forçador algun
+catmus_010,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,nfd_equivalent,⁊en pod̾ ⁊ en paz. si el forçador algun,⁊en pod̾ ⁊ en paz. si el forçador algun
+catmus_010,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,punctuation_dropped,⁊en pod̾ ⁊ en paz. si el forçador algun,en pod̾  en paz si el forçador algun
+catmus_011,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,exact,des maguer q̃ se abenga Ꝯ el q̃ firio por,des maguer q̃ se abenga Ꝯ el q̃ firio por
+catmus_011,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,nfd_equivalent,des maguer q̃ se abenga Ꝯ el q̃ firio por,des maguer q̃ se abenga Ꝯ el q̃ firio por
+catmus_011,"Salamanca, Biblioteca Histórica USAL, 2673",14,Textualis,Castilian,test,punctuation_dropped,des maguer q̃ se abenga Ꝯ el q̃ firio por,des maguer q̃ se abenga Ꝯ el q̃ firio por
+catmus_012,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,tyrar sa liçẽçia ⁊ el atreuimiẽto de maldat ⁊ por,tyrar sa liçẽçia ⁊ el atreuimiẽto de maldat ⁊ por
+catmus_012,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,tyrar sa liçẽçia ⁊ el atreuimiẽto de maldat ⁊ por,tyrar sa liçẽçia ⁊ el atreuimiẽto de maldat ⁊ por
+catmus_012,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,tyrar sa liçẽçia ⁊ el atreuimiẽto de maldat ⁊ por,tyrar sa liçẽçia  el atreuimiẽto de maldat  por
+catmus_013,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,ra/ cõuiene de saber q̃ cauałłia ⁊ sabiduria da uida,ra/ cõuiene de saber q̃ cauałłia ⁊ sabiduria da uida
+catmus_013,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,ra/ cõuiene de saber q̃ cauałłia ⁊ sabiduria da uida,ra/ cõuiene de saber q̃ cauałłia ⁊ sabiduria da uida
+catmus_013,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,ra/ cõuiene de saber q̃ cauałłia ⁊ sabiduria da uida,ra cõuiene de saber q̃ cauałłia  sabiduria da uida
+catmus_014,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,casa/ode una cõpaña asi es de meñster sabiduria,casa/ode una cõpaña asi es de meñster sabiduria
+catmus_014,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,casa/ode una cõpaña asi es de meñster sabiduria,casa/ode una cõpaña asi es de meñster sabiduria
+catmus_014,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,casa/ode una cõpaña asi es de meñster sabiduria,casaode una cõpaña asi es de meñster sabiduria
+catmus_015,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,çibdat ⁊ es rreyno en tpõ de paz segut̃ la opiniõn,çibdat ⁊ es rreyno en tpõ de paz segut̃ la opiniõn
+catmus_015,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,çibdat ⁊ es rreyno en tpõ de paz segut̃ la opiniõn,çibdat ⁊ es rreyno en tpõ de paz segut̃ la opiniõn
+catmus_015,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,çibdat ⁊ es rreyno en tpõ de paz segut̃ la opiniõn,çibdat  es rreyno en tpõ de paz segut̃ la opiniõn
+catmus_016,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,uitoria de sus enemigos por q̃ fuerõ iustos ⁊ bue,uitoria de sus enemigos por q̃ fuerõ iustos ⁊ bue
+catmus_016,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,uitoria de sus enemigos por q̃ fuerõ iustos ⁊ bue,uitoria de sus enemigos por q̃ fuerõ iustos ⁊ bue
+catmus_016,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,uitoria de sus enemigos por q̃ fuerõ iustos ⁊ bue,uitoria de sus enemigos por q̃ fuerõ iustos  bue
+catmus_017,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,exact,⁊ en cabo cõcluyo asi senõr sabe si es algã mal,⁊ en cabo cõcluyo asi senõr sabe si es algã mal
+catmus_017,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,nfd_equivalent,⁊ en cabo cõcluyo asi senõr sabe si es algã mal,⁊ en cabo cõcluyo asi senõr sabe si es algã mal
+catmus_017,"San Lorenzo de El Escorial, RBME, K.I.5",15,Cursiva,Castilian,test,punctuation_dropped,⁊ en cabo cõcluyo asi senõr sabe si es algã mal, en cabo cõcluyo asi senõr sabe si es algã mal
+catmus_018,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,exact,eneste mũdo que dessearõ auer fiios o,eneste mũdo que dessearõ auer fiios o
+catmus_018,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,nfd_equivalent,eneste mũdo que dessearõ auer fiios o,eneste mũdo que dessearõ auer fiios o
+catmus_018,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,punctuation_dropped,eneste mũdo que dessearõ auer fiios o,eneste mũdo que dessearõ auer fiios o
+catmus_019,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,exact,contͣ dios nĩ contra el tu ꝓximo q̃ te,contͣ dios nĩ contra el tu ꝓximo q̃ te
+catmus_019,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,nfd_equivalent,contͣ dios nĩ contra el tu ꝓximo q̃ te,contͣ dios nĩ contra el tu ꝓximo q̃ te
+catmus_019,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,punctuation_dropped,contͣ dios nĩ contra el tu ꝓximo q̃ te,contͣ dios nĩ contra el tu ꝓximo q̃ te
+catmus_020,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,exact,para mientes por ti mesmo que si die,para mientes por ti mesmo que si die
+catmus_020,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,nfd_equivalent,para mientes por ti mesmo que si die,para mientes por ti mesmo que si die
+catmus_020,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,punctuation_dropped,para mientes por ti mesmo que si die,para mientes por ti mesmo que si die
+catmus_021,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,exact,quando morio ¶ Mio fiio com̃o quier qũ,quando morio ¶ Mio fiio com̃o quier qũ
+catmus_021,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,nfd_equivalent,quando morio ¶ Mio fiio com̃o quier qũ,quando morio ¶ Mio fiio com̃o quier qũ
+catmus_021,"Madrid, BNE, MSS. 12732",15,Hybrida,Castilian,test,punctuation_dropped,quando morio ¶ Mio fiio com̃o quier qũ,quando morio  Mio fiio com̃o quier qũ
