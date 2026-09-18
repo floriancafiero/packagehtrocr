@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 from pathlib import Path
 import random
 import re
@@ -72,8 +73,19 @@ def scan_pairs(root: Path, require_image: bool = True):
         ).rstrip("\r\n")
 
         base = strip_gt_suffix(gt_path)
-        line_id = "::".join(
+        identity = "/".join(
             (*rel.parts[:-1], base)
+        )
+        digest = hashlib.sha1(
+            identity.encode("utf-8")
+        ).hexdigest()[:16]
+        readable = re.sub(
+            r"[^A-Za-z0-9_.-]+",
+            "_",
+            base,
+        )[:40]
+        line_id = (
+            f"gt4_{digest}_{readable}"
         )
 
         rows.append({
