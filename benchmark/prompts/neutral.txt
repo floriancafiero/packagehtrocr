@@ -1,0 +1,2 @@
+Transcribe the text in this line image.
+Output ONLY the transcription.
