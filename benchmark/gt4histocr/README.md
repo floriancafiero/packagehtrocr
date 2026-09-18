@@ -93,6 +93,10 @@ gt_path
 `Kallimachos` is explicitly marked German/Latin rather than assigning a
 line-level language without evidence.
 
+`line_id` is a deterministic XML-safe identifier derived from the upstream
+relative path (SHA-1 prefix + readable source stem). The original `gt_path`
+remains in the manifest for provenance.
+
 ## 3. Recognition systems
 
 The goal is not to benchmark models trained directly on these exact lines.
@@ -114,8 +118,8 @@ Prediction output should be a JSON mapping the frozen manifest IDs to text:
 
 ```json
 {
-  "dta19::1882-keller_sinngedicht::04970": "recognized line",
-  "EarlyModernLatin::1500-book::00123": "recognized line"
+  "gt4_8f3c..._04970": "recognized line",
+  "gt4_28ab..._00123": "recognized line"
 }
 ```
 
