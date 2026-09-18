@@ -1,0 +1,3 @@
+Transcribe the handwritten text in this line image.
+Use only u and i, never v and j, regardless of original or modern usage.
+Output ONLY the transcription.
