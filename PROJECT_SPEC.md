@@ -1,16 +1,33 @@
 # ocrinfer — project specification
 
-## Target contribution
+## Primary research target
 
-**Working paper title:** *Statistical Evaluation of OCR and Handwritten Text Recognition in R*
+**CVPR 2027** — working research title:
 
-**Working package name:** `ocrinfer` (provisional).
+**Beyond Edit Distance: Evaluating Visual Transcription Fidelity in the VLM Era**
 
-The intended R Journal contribution is not another implementation of CER/WER. It is:
+The R package is the evaluation engine and reproducibility artifact for the paper.
+A later R Journal package paper remains a secondary objective after the research
+framework and empirical findings mature.
 
-> an R-native framework for uncertainty quantification, paired system comparison,
-> hierarchical aggregation, normalization sensitivity analysis, and error diagnosis
-> in OCR/HTR evaluation.
+## Research contribution
+
+The CVPR project asks whether conventional OCR/HTR leaderboards adequately
+characterize visual transcription quality when specialized recognizers and
+generative VLMs have different inductive biases.
+
+The intended contribution combines:
+
+- explicit Unicode/evaluation policy;
+- micro vs document-level macro estimands;
+- paired higher-level uncertainty;
+- mechanical error decomposition;
+- source-aware transcription-fidelity categories;
+- model-family comparison;
+- robustness/sensitivity of leaderboard conclusions.
+
+The headline novelty is NOT CER/WER, paired inference, or error taxonomies alone.
+See `paper/CVPR_POSITIONING.md` for the literature boundaries.
 
 ## Canonical data model
 
@@ -55,54 +72,104 @@ Calculate an error rate per higher-level unit and average:
 
 For systems evaluated on the same material:
 
-1. calculate metrics per document/manuscript;
-2. calculate paired differences;
-3. resample complete higher-level units;
-4. report the difference and bootstrap interval.
+1. verify the same paired IDs and reference text;
+2. calculate metrics per document/manuscript;
+3. calculate paired differences;
+4. resample complete higher-level units;
+5. report effect and bootstrap interval.
 
-## Public benchmark plan
+This is a benchmark-quality protocol rather than a claim of new statistical
+theory.
 
-1. **CATMuS Medieval** — primary open HTR example.
-2. **Historical printed OCR** — preferably an explicitly licensed OCR-D/QuiVer subset.
-3. **Controlled Unicode examples** — synthetic examples distributed with the package.
+## Main empirical plan
 
-Predictions should be generated once and frozen so paper reproduction does not need
-to rerun large OCR/HTR models.
+### Benchmark A — CMMHWR26
 
-## Release roadmap
+Use the public post-competition test set with official transcriptions.
 
-### 0.0.1 — metric kernel
+Initial systems:
+- Kraken / CATMuS baseline;
+- MEDUSA-4B;
+- MEDUSA-9B;
+- ideally one additional general VLM.
+
+### Benchmark B — second domain
+
+Add a modern/printed or modern-handwriting setting to test whether findings
+generalize beyond historical manuscripts.
+
+### Controlled fixture
+
+The bundled CATMuS examples remain useful for regression tests and Unicode
+sensitivity demonstrations, but are not recognition-system benchmark results.
+
+## Source-aware fidelity study
+
+Mechanical edit types are insufficient for the CVPR paper.
+
+The annotation study should distinguish at least:
+
+- visual misrecognition;
+- content omission;
+- insertion/hallucinated addition;
+- repetition;
+- orthographic normalization;
+- linguistic correction;
+- abbreviation representation change;
+- unsupported completion;
+- ambiguous/cannot determine.
+
+Annotations should be image-conditioned, blinded to system identity, and
+double-coded on a stratified sample.
+
+## Package roadmap
+
+### Implemented
+
 - normalization;
 - grapheme/codepoint/word tokenization;
 - alignment;
 - edit counts;
 - CER/WER;
 - row-level evaluation;
-- tests and toy data.
-
-### 0.1.0 — aggregation
+- metadata preservation;
 - micro/macro summaries;
-- line/page/document/manuscript grouping;
-- evaluation-policy metadata;
-- first public benchmark subset.
-
-### 0.2.0 — comparison and inference
-- paired system comparison;
-- document-level bootstrap;
-- confidence intervals;
-- normalization sensitivity.
-
-### 0.3.0 — diagnostics and presentation
+- paired document-level bootstrap;
+- normalization sensitivity;
 - confusion tables;
 - error profiles;
-- comparison/error plots.
+- publication-oriented plots;
+- unit tests and CI.
+
+Current GitHub Actions check: **R CMD check --as-cran — Status: OK**.
+
+### CVPR-critical next functions
+
+- span-level error extraction;
+- repeated-span detection;
+- export of candidate errors for annotation;
+- import of adjudicated fidelity labels;
+- fidelity-profile summaries and plots;
+- rank/policy stability summaries.
 
 ## Deliberately postponed
 
-- OCR execution;
+Not needed for the CVPR core:
+
+- OCR execution inside the R package;
 - image processing;
 - PAGE/ALTO readers;
 - layout metrics;
-- confidence calibration;
 - model downloading;
-- Python dependencies.
+- generic confidence calibration.
+
+## Submission decision rule
+
+Proceed with CVPR if the experiments reveal a substantive phenomenon that CER/WER
+alone obscures and it generalizes beyond one narrow benchmark.
+
+Redirect to ICDAR if the strongest contribution remains document-analysis/HTR
+specific.
+
+Retain R Journal as a later software publication if the package is strong but the
+empirical novelty is insufficient for a broad vision venue.
