@@ -1,321 +1,360 @@
 # CVPR 2027 experiment plan
 
-## Goal
+## Working research question
 
-Determine whether conventional edit-distance leaderboards adequately characterize
-the quality and fidelity of modern OCR/HTR systems, especially generative VLMs.
+**Can generative visual recognizers follow an explicit transcription policy, or
+do learned linguistic/editorial priors dominate what they output?**
 
-The experiments are designed to be falsifiable. If the proposed phenomena are
-weak or absent, the paper should be redirected to ICDAR/R Journal rather than
-overclaimed.
+The central experiment changes the requested transcription policy while keeping
+the **same source image, same model weights, same decoding regime, and same
+evaluation material**.
 
-## Hypotheses
+The paper therefore separates two quantities that ordinary CER/WER conflate:
 
-### H1 — Error-profile divergence
+1. **visual recognition ability**;
+2. **compliance with the requested transcription convention**.
 
-Systems with comparable CER/WER can exhibit substantially different proportions
-of substitutions, deletions, insertions, repetitions, normalization/correction,
-and unsupported-generation errors.
+## Core intervention: policy swap
 
-**Evidence required:** effect sizes with uncertainty and consistent patterns on
-more than one subset/model pair.
+For each promptable VLM, evaluate the same images under three pre-registered
+conditions.
 
-### H2 — Generative-fidelity trade-off
+### Neutral
 
-Generative VLMs may reduce local recognition errors while introducing more
-language-prior transformations (normalization, correction, completion, or
-unsupported addition) than specialized recognizers.
+Minimal instruction: transcribe the line and return only the transcription.
 
-**Evidence required:** human-validated source-aware annotations.
+### Matched policy
 
-### H3 — Aggregation sensitivity
+Instruction matches the benchmark target convention.
 
-Micro and document-level macro evaluation may produce materially different
-estimates and possibly different system ordering when benchmark documents vary
-in length/difficulty.
+- CMMHWR26: CATMuS-style convention.
+- GT4HistOCR: diplomatic convention.
 
-**Evidence required:** report both estimands and quantify document-level
-heterogeneity. Ranking reversal is interesting but not required.
+### Conflicting policy
 
-### H4 — Evaluation-policy sensitivity
+Instruction deliberately requests the opposite editorial behavior.
 
-Plausible text policies (Unicode normalization, grapheme/codepoint unit,
-punctuation, whitespace, case) can change effect magnitude and, in some cases,
-system ordering.
+- CMMHWR26: diplomatic preservation.
+- GT4HistOCR: CATMuS-style normalization/allograph policy.
 
-**Evidence required:** policies pre-specified before inspecting model ranking.
+Prompts are frozen under `benchmark/prompts/` before model inference.
 
-### H5 — Small leaderboard gains may be fragile
+## Main hypotheses
 
-For systems evaluated on the same material, some small CER/WER differences may
-have document-level paired intervals that include zero or show strong
-heterogeneity.
+### H1 — transcription is instruction-conditioned
 
-**Evidence required:** paired resampling at a defensible cluster level.
+For a non-trivial fraction of source lines, changing only the transcription
+policy changes the VLM output.
 
-This is not claimed as a novel statistical theorem; it is a benchmark-quality
-diagnostic.
+Primary observable:
+- exact output-change rate;
+- normalized grapheme distance between prompt-conditioned outputs.
+
+### H2 — matched policy improves target compliance
+
+Relative to the neutral and conflicting prompts, a policy matching the benchmark
+target reduces target CER/WER and policy-specific errors.
+
+Primary observable:
+- paired B-A CER/WER difference;
+- fraction of lines improved/worsened/unchanged;
+- document-level bootstrap interval.
+
+### H3 — standard CER conflates perception and policy mismatch
+
+Some apparent recognition errors are coherent output-policy choices rather than
+simple visual misreadings.
+
+Evidence:
+- source-aware annotation of changed/error spans;
+- policy-sensitive character/abbreviation/segmentation subsets;
+- examples where prompt changes alter editorial representation while visual
+  content remains stable.
+
+### H4 — specialization changes controllability
+
+A historical-text specialist and a general-purpose VLM may respond differently
+to the same policy intervention.
+
+Candidate comparison:
+- MEDUSA-4B;
+- Qwen3-VL-4B-Instruct;
+- MEDUSA-9B matched-policy reference run.
+
+Possible outcomes are both informative:
+- specialization improves compliance;
+- or fine-tuning hard-codes a convention and makes policy switching harder.
+
+### H5 — policy effects generalize across visual domains
+
+The same qualitative phenomenon should be tested in:
+- historical handwriting (CMMHWR26);
+- historical print (GT4HistOCR).
+
+The desired target convention is intentionally different between the two
+benchmarks.
 
 ## Benchmark A — CMMHWR26
 
-### Why
+### Data
 
-Public post-competition test ground truth, historical handwriting, multiple
-languages/tasks, and direct relevance to classical/specialized HTR vs generative
-VLMs.
+Use the public post-competition test set with official transcriptions.
 
-### Systems
-
-Minimum:
-- Kraken / CATMuS baseline;
-- MEDUSA-4B;
-- MEDUSA-9B.
-
-Strong extension:
-- one Qwen-family VLM used in the same line-recognition setting;
-- one additional specialized recognizer if outputs are reproducible.
-
-### Data table
-
-One row per line × system:
-
-- task;
-- language;
+Canonical table:
 - document_id;
 - page_id;
 - line_id;
 - system;
 - reference;
-- prediction.
+- prediction;
+- task/language if recoverable;
+- source image and line geometry.
 
-### First validation
+### Systems
 
-Before novel analysis, reproduce official aggregate CER/WER closely enough to
-validate line extraction, Unicode policy, and model inference.
+Fixed baseline:
+- Kraken / CATMuS 1.6.
+
+Promptable:
+- MEDUSA-4B;
+- Qwen3-VL-4B-Instruct.
+
+Scale/control:
+- MEDUSA-9B under matched CATMuS policy initially.
+
+### Conditions
+
+For MEDUSA-4B and Qwen-4B:
+- neutral;
+- CATMuS matched;
+- diplomatic conflicting.
+
+The benchmark-specific manifest is:
+`benchmark/cmmhwr/SYSTEMS_POLICY.csv`.
 
 ## Benchmark B — GT4HistOCR historical print
 
-Use **GT4HistOCR** as the primary second domain.
+### Why
 
-Why:
-- 313,173 printed line-image/transcription pairs;
-- German Fraktur and Early Modern Latin;
-- 15th–19th century material;
-- diplomatic-style transcriptions preserving historical character forms;
-- upstream Zenodo README states CC BY-SA 4.0 (the publication describes CC BY 4.0); treat the archive as CC BY-SA unless clarified;
-- print rather than handwriting, giving a genuine visual-domain shift from
-  CMMHWR26;
-- not listed among the MEDUSA 0.1 training datasets.
+GT4HistOCR gives a genuine domain shift:
+- historical print instead of handwriting;
+- German/Latin material;
+- diplomatic transcriptions preserving historical forms;
+- multiple books/documents for clustered inference.
 
-Use a pre-specified held-out subset spanning printing periods/scripts rather than
-the full corpus if inference cost is high.
+The corpus is heavily imbalanced by subcorpus, so use the frozen balanced subset
+builder rather than uniform line sampling.
 
-Candidate systems:
-- Tesseract or an OCR-D/Calamari historical-print recognizer;
-- MEDUSA-4B/9B as out-of-domain visual transcription models;
-- the same additional general VLM used on CMMHWR26.
+### Subset
 
-This benchmark is especially useful for source-fidelity categories because
-Fraktur, historical spellings, and diplomatic character forms create cases where
-language-prior normalization can be distinguished from literal recognition.
+Default pilot:
+- up to 500 lines per upstream subcorpus;
+- at most 75 lines per book;
+- seed 2027.
 
-Optional third-domain validation:
-- IAM or another modern handwriting dataset if time permits.
+The final sample size can increase after inference-cost measurement, but the
+selection rule must be frozen before inspecting model effects.
 
-The second benchmark must test whether findings generalize beyond medieval
-handwriting, not simply add more historical pages.
+### Systems and conditions
 
-## Fidelity annotation study
+Promptable:
+- MEDUSA-4B: neutral / diplomatic matched / CATMuS conflicting;
+- Qwen3-VL-4B: neutral / diplomatic matched / CATMuS conflicting;
+- MEDUSA-9B diplomatic matched initially.
 
-### Sampling
+A conventional OCR baseline can be added if it is not trained on the evaluation
+lines. Do not use a GT4HistOCR-trained model as an out-of-domain baseline and
+then claim generalization.
 
-Create a stratified sample from *errors*, not from all correct lines.
+The benchmark-specific manifest is:
+`benchmark/gt4histocr/SYSTEMS_POLICY.csv`.
 
-Target initial pilot:
-- 300–500 errorful line outputs;
-- balanced across model families and languages/tasks;
-- include matched cases where systems have similar CER but different outputs.
+## Primary quantitative analyses
 
-If taxonomy proves stable, expand to 1,000+ errorful outputs.
+### 1. Ordinary benchmark accuracy
 
-### Annotators
+For every run:
+- CER/WER;
+- micro aggregation;
+- document-level macro aggregation;
+- document-level heterogeneity.
 
-At least two independent annotators for the source-aware categories.
+This establishes comparability with conventional OCR/HTR evaluation.
 
-Each item should display:
-- line image;
-- reference transcription;
-- system output;
-- aligned differences.
+### 2. Within-model policy swap
 
-Annotators should not see model identity during labeling.
+Use `policy_swap_summary()`.
+
+For every same-model policy pair:
+- output-change rate;
+- mean/median normalized output distance;
+- fraction of source lines moving toward the benchmark target;
+- fraction moving away;
+- mean line-level target delta;
+- document-level macro target delta with bootstrap interval.
+
+The most important comparisons are:
+- neutral -> matched;
+- conflicting -> matched.
+
+### 3. Cross-model comparison
+
+Under the **same matched target policy**:
+- conventional/specialized/general VLM accuracy;
+- paired document-level differences;
+- error profiles.
+
+This separates policy compliance from model-family performance.
+
+### 4. Policy-sensitive subsets
+
+Predefine benchmark-specific subsets where convention matters.
+
+CMMHWR candidates:
+- u/v and i/j conventions;
+- allographic forms;
+- abbreviations;
+- segmentation changes.
+
+GT4HistOCR candidates:
+- historical/allographic Unicode characters;
+- abbreviation markers where reliably encoded;
+- historical spelling/word-boundary cases.
+
+Do not create subsets after inspecting which model benefits.
+
+## Source-aware annotation study
+
+This is an explanatory validation layer, not the novelty claim by itself.
+
+### Pilot
+
+Target:
+- 300–500 error or prompt-changed spans;
+- stratified by model and benchmark strata;
+- two independent annotators;
+- model identity hidden;
+- image + target convention + reference + output visible.
 
 ### Labels
 
-Mechanical labels:
-- substitution;
-- deletion;
-- insertion;
-- repetition.
+Mechanical/source-aware categories:
+- visual_misrecognition;
+- content_omission;
+- hallucinated_addition;
+- repetition;
+- orthographic_normalization;
+- linguistic_correction;
+- abbreviation_change;
+- segmentation_policy_change;
+- unsupported_completion;
+- ambiguous/other.
 
-Source-aware labels:
-- visual misrecognition;
-- orthographic normalization;
-- linguistic correction;
-- abbreviation representation change;
-- unsupported completion;
-- hallucinated addition;
-- content omission;
-- ambiguous / cannot determine.
-
-Allow multi-label where a span genuinely combines phenomena.
+A policy-intervention label applies only when behavior exceeds or conflicts with
+the **declared target convention**.
 
 ### Reliability
 
 Report:
 - raw agreement;
-- a chance-corrected coefficient suitable for the label structure;
+- Cohen's kappa for the primary category;
+- ambiguity rate;
 - adjudication protocol.
 
-Do not collapse ambiguous cases silently.
+If pilot agreement is weak, revise/merge categories before full annotation.
 
-## Automatic error decomposition
+## Statistical unit and inference
 
-The package already provides:
-- alignments;
-- CER/WER;
-- edit counts;
-- confusion tables;
-- error profiles;
-- micro/macro aggregation;
-- paired cluster bootstrap;
-- policy sensitivity.
+Never treat thousands of lines from the same document as independent evidence.
 
-Next software work should prioritize:
-1. span-level error extraction;
-2. repeated-span detection;
-3. export format for annotation;
-4. import of adjudicated fidelity labels;
-5. fidelity-profile summaries.
+Primary comparison:
+- paired differences on the same recognition lines;
+- resample complete documents/manuscripts/books;
+- report effect + interval.
 
-Avoid building unrelated package functionality before the experiment is running.
+Micro CER/WER remain useful descriptive leaderboard quantities, but are not the
+primary inferential estimand.
 
-## Statistical analyses
+## Pre-registration-like safeguards
 
-### Standard leaderboard reproduction
+Before running the full experiment:
 
-Per system:
-- official metric/policy;
-- micro CER/WER;
-- document-level macro CER/WER.
+1. freeze the benchmark subset IDs;
+2. freeze prompt text;
+3. freeze exact model revisions;
+4. freeze decoding settings;
+5. freeze primary comparisons;
+6. freeze policy-sensitive subset definitions;
+7. record checksums for prediction files.
 
-### Paired model differences
+Do not tune prompt wording after seeing which condition improves the target
+score.
 
-For each system pair:
-- B - A effect;
-- document/manuscript cluster bootstrap interval;
-- paired scatter/forest plot.
+## Figures planned
 
-### Heterogeneity
+1. **Policy-swap design**: same image + same weights -> three transcription
+   policies.
+2. **Prompt controllability**: output-change rate and output distance by model.
+3. **Target movement**: matched-vs-neutral/conflicting delta CER/WER with
+   document bootstrap intervals.
+4. **Policy-sensitive subset performance**.
+5. **Source-grounded behavior profile** from human annotation.
+6. **Handwriting vs print comparison**.
 
-Stratify by:
-- language/task;
-- document/manuscript;
-- second benchmark strata.
+## Success criterion for CVPR
 
-Only use script/century if metadata are reliable.
+Proceed as a CVPR main-track submission if the policy intervention reveals a
+substantive, reproducible phenomenon such as:
 
-### Fidelity profile
+- matched instructions materially improve target compliance;
+- conflicting instructions induce coherent editorial changes without equivalent
+  visual-recognition changes;
+- specialist and general VLMs differ strongly in controllability;
+- CER/WER differences can be decomposed into policy mismatch vs visual error;
+- effects repeat across handwriting and print.
 
-Per system/model family:
-- frequency of each source-aware error category;
-- normalized per reference character/word and per errorful line;
-- paired comparisons when the same line is recognized by all systems.
+The strongest result need not be that matched prompts always help. Finding that
+a fine-tuned VLM **cannot** override its learned transcription convention despite
+explicit instructions would also be scientifically meaningful.
 
-### Sensitivity grid
-
-Pre-register a compact set:
-
-1. competition-compatible;
-2. NFC + grapheme;
-3. raw codepoint;
-4. punctuation-insensitive;
-5. collapsed whitespace;
-6. optional case-insensitive only where case is meaningful.
-
-Do not optimize policy to favor a system.
-
-## Figures
-
-1. **Framework diagram**: image → recognizer → alignment → statistical profile →
-   fidelity profile.
-2. **Same CER, different errors**: matched qualitative examples.
-3. **Micro vs macro / paired forest plot**.
-4. **Error composition by model family**.
-5. **Human-validated generative fidelity errors**.
-6. **Policy sensitivity heatmap / rank stability plot**.
-
-## Critical ablations
-
-- grapheme vs codepoint;
-- with/without punctuation;
-- micro vs macro;
-- line bootstrap vs document bootstrap (diagnostic only; document is primary);
-- purely automatic taxonomy vs human source-aware labels.
-
-## Success criteria for CVPR
-
-Proceed as CVPR main-track paper if, by late October, we have:
-
-- at least two model families including generative VLMs;
-- a validated fidelity annotation taxonomy;
-- one strong main benchmark plus a second domain;
-- at least one substantive result conventional CER/WER obscures;
-- public/reproducible analysis code;
-- clean benchmark inference pipeline.
-
-## Redirection criteria
+## Redirect criterion
 
 Prefer ICDAR if:
-- the important phenomena appear only on historical HTR;
-- source-aware taxonomy is valuable but data scale remains modest;
-- the main novelty is document-analysis-specific.
+- policy effects are weak;
+- interesting behavior is confined to one historical HTR benchmark;
+- the main value becomes the evaluation toolkit/error-analysis framework.
 
-Prefer R Journal if:
-- empirical novelty is weak but the evaluation software/workflow is robust,
-  general, and mature.
+Retain the R Journal paper as a later software publication regardless of the
+CVPR empirical outcome.
 
 ## Timeline
 
 ### 18–30 September
-- freeze related-work matrix;
-- obtain CMMHWR26 ground truth;
-- generate baseline + MEDUSA frozen predictions;
-- reproduce official metrics;
-- implement span export / annotation tooling.
+- finish benchmark plumbing;
+- freeze CMMHWR and GT4 subset IDs;
+- freeze prompts/system manifests;
+- run CMMHWR Kraken + first 4B policy swaps;
+- validate output/table pipeline.
 
 ### 1–15 October
-- pilot fidelity taxonomy on 300–500 outputs;
-- revise categories based on disagreements;
-- identify second benchmark;
-- run second-domain systems.
+- run full 4B experiment on both benchmarks;
+- pilot 300–500 source-aware annotations;
+- inspect whether H1–H4 are empirically supported;
+- decide whether 9B/additional models are needed.
 
 ### 16–31 October
-- full annotation sample;
-- final statistical analyses;
-- figures/tables;
-- write method + experiments.
+- full annotation if pilot is reliable;
+- policy-sensitive subset analyses;
+- all figures and ablations;
+- paper draft.
 
 ### 1–9 November
-- complete draft;
-- internal reviewer-style pass;
-- strengthen comparisons/ablations.
+- reviewer-style stress test;
+- address strongest alternative explanations;
+- finalize related work and limitations.
 
 ### 10 November
-- CVPR paper registration deadline.
-
-### 11–15 November
-- final experiments and writing.
+- CVPR registration.
 
 ### 16 November
-- CVPR submission deadline AOE.
+- CVPR submission.
