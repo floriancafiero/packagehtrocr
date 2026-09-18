@@ -23,7 +23,7 @@ The three values of `system` in
 not OCR/HTR model outputs**:
 
 - `exact`: identical to the public reference;
-- `nfd_equivalent`: canonically equivalent NFD Unicode representation;
+- `nfc_equivalent`: canonically equivalent NFC Unicode representation;
 - `punctuation_dropped`: Unicode punctuation removed.
 
 This fixture exists to test Unicode/normalization sensitivity and aggregation
