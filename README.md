@@ -2,9 +2,15 @@
 
 Experimental R package for **statistically explicit evaluation of OCR and handwritten text recognition (HTR)**.
 
-The package name `ocrinfer` is provisional. The repository now supports a **CVPR 2027 research project on visual transcription fidelity in the VLM era**; a later R Journal software paper remains a secondary objective.
+The package name `ocrinfer` is provisional. The repository now supports a **CVPR 2027 project on transcription-policy compliance in generative OCR/HTR**; a later R Journal software paper remains a secondary objective.
 
 The package does **not** run OCR/HTR models. It starts from reference transcriptions and recognition outputs and asks how recognition quality should be measured, aggregated, compared, and diagnosed.
+
+The current research experiment additionally treats the **target transcription
+policy** as a controlled variable: the same VLM and image are evaluated under
+neutral, matched-policy, and deliberately conflicting instructions. The goal is
+to separate visual recognition ability from compliance with an editorial
+transcription convention.
 
 ## Why another evaluation package?
 
@@ -180,8 +186,11 @@ Next priorities:
 
 - generate frozen CMMHWR26 predictions for Kraken/CATMuS and generative VLMs;
 - pilot and validate the source-aware transcription-fidelity taxonomy;
-- add a second OCR/HTR domain;
-- test whether conventional CER/WER hides substantive model-family differences;
+- run the pre-registered CMMHWR26 and GT4HistOCR policy swaps;
+- measure within-model prompt controllability with `policy_swap_summary()`;
+- pilot blinded, policy-conditioned source-aware annotation;
+- test whether CER/WER conflates visual error with policy mismatch;
 - prepare the CVPR 2027 submission by 16 November 2026.
 
-See `paper/CVPR_POSITIONING.md`, `paper/CVPR_EXPERIMENT_PLAN.md`, and `benchmark/CMMHWR26_PLAN.md`.
+See `paper/CVPR_POLICY_PIVOT.md`, `paper/CVPR_POSITIONING.md`,
+`paper/CVPR_EXPERIMENT_PLAN.md`, and the benchmark folders.
