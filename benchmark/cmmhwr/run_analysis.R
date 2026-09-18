@@ -84,11 +84,6 @@ if (length(systems) < 2L) {
 
 # Verify exact pairing before any metric is computed.
 ids_by_system <- split(d$line_id, d$system)
-reference_by_system <- split(
-  d[c("line_id", "reference")],
-  d$system
-)
-
 canonical_ids <- sort(ids_by_system[[systems[[1]]]])
 
 for (system_name in systems[-1]) {
@@ -109,6 +104,7 @@ reference_lookup <- d[
   drop = FALSE
 ]
 reference_lookup <- reference_lookup[order(reference_lookup$line_id), ]
+rownames(reference_lookup) <- NULL
 
 for (system_name in systems[-1]) {
   candidate <- d[
@@ -117,6 +113,7 @@ for (system_name in systems[-1]) {
     drop = FALSE
   ]
   candidate <- candidate[order(candidate$line_id), ]
+  rownames(candidate) <- NULL
 
   if (!identical(reference_lookup, candidate)) {
     stop(
@@ -324,18 +321,26 @@ annotation_keep <- intersect(
   names(evaluated)
 )
 
-batch <- ocrinfer::prepare_fidelity_annotation(
-  evaluated,
-  metric = "cer",
-  system_col = "system",
-  id_col = "line_id",
-  keep = annotation_keep,
-  strata = annotation_strata,
-  n = min(annotation_n, nrow(cer_spans)),
-  context = 8L,
-  seed = 2027L,
-  blind = TRUE
-)
+batch <- if (nrow(cer_spans) > 0L) {
+  ocrinfer::prepare_fidelity_annotation(
+    evaluated,
+    metric = "cer",
+    system_col = "system",
+    id_col = "line_id",
+    keep = annotation_keep,
+    strata = annotation_strata,
+    n = min(annotation_n, nrow(cer_spans)),
+    context = 8L,
+    seed = 2027L,
+    blind = TRUE
+  )
+} else {
+  list(
+    items = data.frame(),
+    key = data.frame(),
+    codebook = ocrinfer::fidelity_codebook()
+  )
+}
 
 write.csv(
   batch$items,
