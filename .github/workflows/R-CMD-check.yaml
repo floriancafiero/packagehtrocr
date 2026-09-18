@@ -8,6 +8,10 @@ on:
 
 permissions: read-all
 
+concurrency:
+  group: R-CMD-check-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
