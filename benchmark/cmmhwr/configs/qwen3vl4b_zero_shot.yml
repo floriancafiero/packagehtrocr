@@ -1,0 +1,26 @@
+run_name: "cvpr_qwen3vl4b_zero_shot"
+output_dir: "results"
+device: "cuda"
+use_wandb: false
+save_image: true
+
+data:
+  test: "/data/cmmhwr_test_with_transcriptions"
+
+tasks:
+  htr:
+    type: VLMLineHTR
+    config:
+      use_metadata: true
+      model_name: "Qwen/Qwen3-VL-4B-Instruct"
+      device_map: "auto"
+      max_new_tokens: 128
+      line_batch_size: 8
+      max_pixels: 401408
+      prompt_template: >
+        Transcribe the handwritten text in this line image.
+        Keep abbreviations as written, do not expand them.
+        Modernize word segmentation (split or join words following modern usage).
+        Use only u and i, never v and j, regardless of the original or modern usage.
+        Do not record allographic variants, use standard letter forms.
+        Output ONLY the transcription.
