@@ -1,68 +1,77 @@
 # ocrinfer
 
-Experimental R package for statistically explicit evaluation of OCR and handwritten text recognition (HTR).
+Experimental R package for **statistically explicit evaluation of OCR and handwritten text recognition (HTR)**.
 
 The package name `ocrinfer` is provisional. This repository develops the software and reproducibility materials for a possible **R Journal** submission.
 
-## Current scope
+The package does **not** run OCR/HTR models. It starts from reference transcriptions and recognition outputs and asks how recognition quality should be measured, aggregated, compared, and diagnosed.
 
-Implemented:
+## Why another evaluation package?
 
-- Unicode-aware normalization;
-- grapheme-, codepoint-, and word-level alignment;
-- CER and WER;
-- edit-operation summaries;
-- tidy row-level evaluation;
-- preservation of document/page/metadata columns;
-- micro- and macro-averaged recognition summaries;
-- paired comparison of two recognition systems;
-- cluster bootstrap uncertainty by document/manuscript;
-- toy recognition data, tests, vignette, and automated `R CMD check`.
+Computing one CER or WER is easy. Research evaluation is harder when:
 
-Planned next:
+- lines are nested in pages and manuscripts;
+- systems are evaluated on the same material and should be compared as paired observations;
+- long documents dominate pooled error rates;
+- Unicode-equivalent strings have different code-point representations;
+- punctuation, case, or whitespace policies change reported performance;
+- a global error rate hides systematic substitutions, deletions, or insertions.
 
-- normalization sensitivity analysis;
-- confusion/error profiles;
-- publication-oriented plots;
-- small frozen public benchmark subsets;
-- CRAN-quality generated documentation.
+`ocrinfer` is being built around those problems.
 
-## Toy workflow
+## Current API
 
-The bundled toy data contain two systems evaluated on several lines nested in documents.
+### Text policy and elementary metrics
 
 ```r
-toy <- read.csv(
-  system.file("extdata", "toy_recognition.csv", package = "ocrinfer"),
-  stringsAsFactors = FALSE
-)
+normalize_text()
+align_text()
+edit_counts()
+cer()
+wer()
+```
 
+Character evaluation uses Unicode grapheme clusters by default. Code-point evaluation remains available explicitly.
+
+### Dataset evaluation
+
+```r
 results <- evaluate_recognition(
-  toy,
+  data,
   truth = reference,
   prediction = prediction,
   id = line_id,
   system = system,
-  keep = "document_id"
+  keep = c("document_id", "language", "script_type")
 )
+```
 
-# Pool all edit counts.
+The output preserves reference/prediction text by default, edit counts, the requested metadata, and the evaluation policy.
+
+### Micro and macro aggregation
+
+```r
 summarise_recognition(
   results,
   by = "system",
   averaging = "micro"
 )
 
-# Give each document equal weight.
 summarise_recognition(
   results,
   by = "system",
   averaging = "macro",
   unit = "document_id"
 )
+```
 
-# Difference is reported as B - A; negative means B has lower error.
-compare_systems(
+**Micro averaging** pools edit counts before dividing.  
+**Macro averaging** first calculates a rate for each higher-level unit and then gives each unit equal weight.
+
+### Paired system comparison
+
+```r
+comparison <- compare_systems(
   results,
   systems = c("A", "B"),
   unit = "document_id",
@@ -73,11 +82,104 @@ compare_systems(
 )
 ```
 
+The comparison is reported as **B - A**. Negative values therefore mean that system B has the lower error rate.
+
+Before bootstrapping, `compare_systems()` checks that the systems contain the same paired IDs and the same reference text. Complete documents/manuscripts are resampled rather than individual lines.
+
+### Sensitivity to evaluation policy
+
+```r
+normalization_sensitivity(
+  data,
+  truth = reference,
+  prediction = prediction,
+  id = line_id,
+  system = system,
+  policies = list(
+    raw_codepoints = list(
+      unicode = "none",
+      char_unit = "codepoint"
+    ),
+    nfc_graphemes = list(
+      unicode = "NFC",
+      char_unit = "grapheme"
+    ),
+    ignore_punctuation = list(
+      unicode = "NFC",
+      punctuation = "remove"
+    )
+  ),
+  metrics = "cer"
+)
+```
+
+This makes evaluation choices part of the analysis rather than invisible preprocessing.
+
+### Diagnostics
+
+```r
+profile <- error_profile(results, by = "system")
+
+confusions <- confusion_table(
+  results,
+  metric = "cer",
+  by = "system"
+)
+```
+
+`confusion_table()` reconstructs token alignments and represents insertion/deletion gaps explicitly as `<eps>`.
+
+### Publication-oriented plots
+
+```r
+plot_comparison(comparison)
+plot_error_profile(profile, group = "system")
+```
+
+Both functions return ordinary `ggplot` objects and can therefore be extended with standard ggplot2 layers/themes.
+
+## Included examples
+
+### Toy two-system workflow
+
+`inst/extdata/toy_recognition.csv` is a tiny artificial example used to exercise the full workflow.
+
+### Public CATMuS fixture
+
+The repository also contains a small text-only fixture selected from the openly licensed **CATMuS Medieval Samples** dataset:
+
+- `inst/extdata/catmus_medieval_public_fixture.csv`
+- `inst/extdata/catmus_medieval_controlled_predictions.csv`
+
+The second file contains **controlled transformations, not model outputs**:
+
+- `exact`;
+- `nfc_equivalent`;
+- `punctuation_dropped`.
+
+It exists to test Unicode and normalization semantics. It must not be interpreted as a recognition-system benchmark. Attribution and licensing information are in `inst/extdata/CATMUS_ATTRIBUTION.md`.
+
+The longer-term empirical paper benchmark will use frozen predictions from real publicly available OCR/HTR systems.
+
 ## Design principles
 
-1. **Evaluation policy must be explicit.** NFC is applied by default; case, punctuation, and whitespace changes are not silently imposed.
-2. **Lines from the same document are not treated as independent evidence.**
-3. **System comparisons are paired.** The comparison function checks that both systems were evaluated on the same line IDs before resampling higher-level units.
-4. **The package evaluates recognition output; it does not run OCR/HTR models.**
+1. **Evaluation policy is explicit.** NFC is the conservative default; case, punctuation, and whitespace changes are not silently imposed.
+2. **The statistical unit matters.** Lines from the same document/manuscript are not treated as independent evidence when comparing systems.
+3. **System comparisons are genuinely paired.** Same IDs and same reference text are required.
+4. **Raw evidence remains inspectable.** Evaluation results retain source and predicted text by default.
+5. **Controlled examples are clearly separated from model benchmarks.**
+6. **The package evaluates recognition; it does not become an OCR engine.**
 
-See `PROJECT_SPEC.md` for the research and release roadmap.
+## Development status
+
+Current development includes unit tests, a vignette, public fixtures, and automated `R CMD check` on GitHub Actions.
+
+Next priorities:
+
+- validate a clean `R CMD check`;
+- add a small frozen benchmark with real public model predictions;
+- strengthen plotting/reporting;
+- benchmark against existing evaluators;
+- prepare CRAN-quality releases before an R Journal submission.
+
+See `PROJECT_SPEC.md` and `paper/OUTLINE.md` for the research roadmap.
