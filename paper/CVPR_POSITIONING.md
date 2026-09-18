@@ -2,11 +2,11 @@
 
 ## Working title
 
-**Beyond Edit Distance: Evaluating Visual Transcription Fidelity in the VLM Era**
+**Reading or Rewriting? Benchmarking Transcription Policy Compliance in Vision-Language Models**
 
 Alternative:
 
-**Do Better Error Rates Mean Better Transcriptions? Reassessing OCR/HTR Evaluation for Generative Vision-Language Models**
+**Transcription Is a Task Specification: Evaluating Policy Compliance in Generative OCR and HTR**
 
 Target: **CVPR 2027**, submission deadline 16 November 2026 AOE.
 
@@ -16,11 +16,11 @@ Modern generative vision-language models do not only make local recognition
 errors. They can normalize, correct, complete, repeat, omit, or invent text under
 strong language priors.
 
-The paper asks:
+The paper now asks a more controlled question:
 
-> When systems with different inductive biases are compared as visual
-> transcription systems, do conventional OCR/HTR evaluation protocols support
-> reliable conclusions about which system is better and why?
+> When the **same VLM sees the same image**, can it follow different explicit
+> transcription policies (neutral, diplomatic, benchmark-specific), and how much
+> of measured OCR error reflects visual recognition versus policy mismatch?
 
 The contribution is NOT "CER/WER are bad" and is NOT merely "we introduce a
 taxonomy of OCR errors."
@@ -144,11 +144,62 @@ Implication:
 - error categorization itself is not novel;
 - we should not position the paper as simply detecting OCR errors.
 
+### Source-grounded OCR diagnosis and policy control
+
+**OCR-EDR (Zhao et al., September 2026)**  
+Uses source image, OCR output and rendered output to diagnose/localize genuine
+errors while accepting rendering-equivalent representations, and repairs
+omissions/hallucinations in a closed loop.
+
+Implication:
+- source-grounded OCR diagnosis is no longer a novelty claim;
+- our intervention must be the *requested transcription policy*, not merely
+  image-conditioned error classification.
+
+**Vesalainen et al. (2026)**  
+Shows that Qwen can outperform TrOCR in aggregate CER/WER while silently
+regularizing historical orthography, whereas TrOCR preserves orthographic
+fidelity more consistently.
+
+Implication:
+- "VLMs normalize historical text" is already an empirical finding;
+- the CVPR experiment must manipulate policy within the **same VLM and same
+  images**, not simply compare two architectures.
+
+**Wagner et al. (ASR 2026)**  
+Treats transcription policy (verbatim vs intended speech) as a latent variable;
+reports substantial WER confounding from style mismatch and activates models
+toward explicit transcription modes.
+
+Implication:
+- this is a close conceptual precedent and should be cited positively;
+- our visual setting adds independent image evidence and tests prompt-controlled
+  transcription policy compliance in OCR/HTR.
+
+**Normalized vs diplomatic HTR / Ocular**  
+Prior work already demonstrates that the same document image can legitimately
+map to diplomatic or normalized textual targets.
+
+Implication:
+- multiple transcription targets are not novel;
+- the proposed novelty is the *policy-swap experimental protocol for generative
+  visual recognizers*.
+
 ## The defensible gap
 
-The gap is therefore narrower than initially expected. It is the intersection
-of three things that existing work has not yet combined in a general
-source-grounded visual-transcription benchmark:
+The gap is narrower again after OCR-EDR and Vesalainen et al. The most defensible
+space is **instruction-conditioned transcription policy compliance**.
+
+Existing work establishes that:
+- VLM OCR can hallucinate and normalize;
+- source-grounded diagnosis is possible;
+- historical fidelity matters;
+- multiple diplomatic/normalized targets are legitimate.
+
+What appears less occupied is a controlled benchmark where the **same visual
+recognizer, same weights and same images** are evaluated under deliberately
+different transcription-policy instructions, with matched and mismatched target
+policies across two domains.
 
 ### 1. Visual transcription fidelity
 
