@@ -1,0 +1,28 @@
+Package: ocrinfer
+Type: Package
+Title: Statistical Evaluation of OCR and Handwritten Text Recognition
+Version: 0.0.1
+Authors@R: person(
+    given = "Florian",
+    family = "Cafiero",
+    role = c("aut", "cre"),
+    email = "florian.cafiero@epita.fr"
+  )
+Description: Tools for reproducible evaluation of optical character recognition
+    (OCR) and handwritten text recognition (HTR) outputs. The package provides
+    Unicode-aware text normalization, grapheme- and codepoint-level alignment,
+    character and word error rates, edit-operation summaries, and tidy
+    row-level evaluation. Later releases will add hierarchical aggregation,
+    paired system comparison, bootstrap uncertainty, sensitivity analysis,
+    and error-profile visualisation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stringi
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+VignetteBuilder: knitr
