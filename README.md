@@ -2,7 +2,7 @@
 
 Experimental R package for **statistically explicit evaluation of OCR and handwritten text recognition (HTR)**.
 
-The package name `ocrinfer` is provisional. This repository develops the software and reproducibility materials for a possible **R Journal** submission.
+The package name `ocrinfer` is provisional. The repository now supports a **CVPR 2027 research project on visual transcription fidelity in the VLM era**; a later R Journal software paper remains a secondary objective.
 
 The package does **not** run OCR/HTR models. It starts from reference transcriptions and recognition outputs and asks how recognition quality should be measured, aggregated, compared, and diagnosed.
 
@@ -159,7 +159,7 @@ The second file contains **controlled transformations, not model outputs**:
 
 It exists to test Unicode and normalization semantics. It must not be interpreted as a recognition-system benchmark. Attribution and licensing information are in `inst/extdata/CATMUS_ATTRIBUTION.md`.
 
-The longer-term empirical paper benchmark will use frozen predictions from real publicly available OCR/HTR systems.
+The main empirical benchmark is now planned around the public CMMHWR26 post-competition test set with frozen predictions from specialized HTR and generative VLM systems. A second domain will be added for the CVPR study.
 
 ## Design principles
 
@@ -174,12 +174,14 @@ The longer-term empirical paper benchmark will use frozen predictions from real 
 
 Current development includes unit tests, a vignette, public fixtures, and automated `R CMD check` on GitHub Actions.
 
+Current status: `R CMD check --as-cran` passes with **Status: OK** on GitHub Actions.
+
 Next priorities:
 
-- validate a clean `R CMD check`;
-- add a small frozen benchmark with real public model predictions;
-- strengthen plotting/reporting;
-- benchmark against existing evaluators;
-- prepare CRAN-quality releases before an R Journal submission.
+- generate frozen CMMHWR26 predictions for Kraken/CATMuS and generative VLMs;
+- pilot and validate the source-aware transcription-fidelity taxonomy;
+- add a second OCR/HTR domain;
+- test whether conventional CER/WER hides substantive model-family differences;
+- prepare the CVPR 2027 submission by 16 November 2026.
 
-See `PROJECT_SPEC.md` and `paper/OUTLINE.md` for the research roadmap.
+See `paper/CVPR_POSITIONING.md`, `paper/CVPR_EXPERIMENT_PLAN.md`, and `benchmark/CMMHWR26_PLAN.md`.
