@@ -8,16 +8,16 @@ Authors@R: person(
     role = c("aut", "cre"),
     email = "florian.cafiero@epita.fr"
   )
-Description: Tools for reproducible evaluation of optical character recognition
-    (OCR) and handwritten text recognition (HTR) outputs. The package provides
-    Unicode-aware text normalization, grapheme- and codepoint-level alignment,
-    character and word error rates, edit-operation summaries, and tidy
-    row-level evaluation. Later releases will add hierarchical aggregation,
-    paired system comparison, bootstrap uncertainty, sensitivity analysis,
-    and error-profile visualisation.
+Description: Tools for reproducible statistical evaluation of optical character
+    recognition (OCR) and handwritten text recognition (HTR) outputs. The
+    package provides Unicode-aware normalization, grapheme-, codepoint-, and
+    word-level alignment, character and word error rates, micro and macro
+    aggregation, paired cluster-bootstrap system comparisons, normalization
+    sensitivity analysis, and error diagnostics.
 License: MIT + file LICENSE
+URL: https://github.com/floriancafiero/packagehtrocr
+BugReports: https://github.com/floriancafiero/packagehtrocr/issues
 Encoding: UTF-8
-LazyData: true
 Imports:
     stringi
 Suggests:
@@ -26,3 +26,5 @@ Suggests:
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
