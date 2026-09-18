@@ -1,0 +1,6 @@
+export(align_text)
+export(cer)
+export(edit_counts)
+export(evaluate_recognition)
+export(normalize_text)
+export(wer)
