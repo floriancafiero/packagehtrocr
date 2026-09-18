@@ -132,6 +132,11 @@ prepare_fidelity_annotation <- function(
 
   set.seed(seed)
 
+  sample_values <- function(values, size) {
+    if (size == 0L) return(values[integer()])
+    values[sample.int(length(values), size = size, replace = FALSE)]
+  }
+
   candidate_rows <- seq_len(nrow(spans))
 
   if (!is.null(n) && n < length(candidate_rows)) {
@@ -145,7 +150,7 @@ prepare_fidelity_annotation <- function(
 
       selected <- unlist(
         lapply(split_rows, function(idx) {
-          sample(idx, min(length(idx), per_stratum), replace = FALSE)
+          sample_values(idx, min(length(idx), per_stratum))
         }),
         use.names = FALSE
       )
@@ -157,26 +162,25 @@ prepare_fidelity_annotation <- function(
         if (length(remaining) > 0L) {
           selected <- c(
             selected,
-            sample(
+            sample_values(
               remaining,
-              min(length(remaining), n - length(selected)),
-              replace = FALSE
+              min(length(remaining), n - length(selected))
             )
           )
         }
       }
 
       if (length(selected) > n) {
-        selected <- sample(selected, n, replace = FALSE)
+        selected <- sample_values(selected, n)
       }
 
       candidate_rows <- selected
     } else {
-      candidate_rows <- sample(candidate_rows, n, replace = FALSE)
+      candidate_rows <- sample_values(candidate_rows, n)
     }
   }
 
-  candidate_rows <- sample(candidate_rows, length(candidate_rows), replace = FALSE)
+  candidate_rows <- sample_values(candidate_rows, length(candidate_rows))
   sampled <- spans[candidate_rows, , drop = FALSE]
   rownames(sampled) <- NULL
 
