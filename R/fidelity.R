@@ -15,26 +15,38 @@ fidelity_codebook <- function() {
       "orthographic_normalization",
       "linguistic_correction",
       "abbreviation_change",
+      "segmentation_policy_change",
       "unsupported_completion",
       "other",
       "ambiguous"
     ),
+    behavior_group = c(
+      "visual_error",
+      "completeness_error",
+      "unsupported_generation",
+      "unsupported_generation",
+      "policy_intervention",
+      "policy_intervention",
+      "policy_intervention",
+      "policy_intervention",
+      "unsupported_generation",
+      "other",
+      "ambiguous"
+    ),
     definition = c(
-      "Visible source content is transcribed as different characters or words without a plausible normalization/correction interpretation.",
-      "Visible source content is missing from the prediction.",
-      "Prediction contains content that is not supported by visible source evidence.",
+      "Visible source content is transcribed as different characters or words without a plausible policy-related normalization/correction interpretation.",
+      "Visible source content required by the target transcription policy is missing from the prediction.",
+      "Prediction contains content that is not supported by visible source evidence or licensed by the target transcription policy.",
       "Prediction duplicates visible or previously generated content beyond the source.",
-      "Prediction replaces a visible historical, non-standard, or variant written form with a normalized orthographic form.",
-      "Prediction changes a visible source form toward a linguistically more probable or grammatically corrected form.",
-      "Prediction expands, contracts, or otherwise changes the representation of a visible abbreviation relative to the reference convention.",
-      "Prediction supplies plausible content where the visual evidence is insufficient to support that content confidently.",
+      "Prediction normalizes a visible historical, non-standard, allographic, or variant form beyond what the target transcription policy licenses.",
+      "Prediction changes a visible source form toward a linguistically more probable or grammatically corrected form beyond what the target transcription policy licenses.",
+      "Prediction expands, contracts, or otherwise changes the representation of a visible abbreviation contrary to the target transcription policy.",
+      "Prediction splits or joins source tokens in a way that conflicts with the target transcription policy.",
+      "Prediction supplies plausible content where visual evidence is insufficient to support that content confidently.",
       "Error is source-aware but does not fit the current categories.",
-      "The image/reference evidence is insufficient to assign a reliable category."
+      "The image, reference, or transcription policy is insufficient to assign a reliable category."
     ),
-    requires_image = c(
-      TRUE, TRUE, TRUE, TRUE, TRUE,
-      TRUE, TRUE, TRUE, TRUE, TRUE
-    ),
+    requires_image = rep(TRUE, 11),
     stringsAsFactors = FALSE
   )
 }
