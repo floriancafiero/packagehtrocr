@@ -1,0 +1,15 @@
+run_name: "cvpr_kraken_catmus16"
+output_dir: "results"
+device: "cpu"
+use_wandb: false
+save_image: true
+
+data:
+  test: "/data/cmmhwr_test_with_transcriptions"
+
+tasks:
+  htr:
+    type: KrakenHTR
+    config:
+      use_metadata: true
+      model_path: "src/tasks/htr/models/catmus-medieval-1.6.0.mlmodel"
