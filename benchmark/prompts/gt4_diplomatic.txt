@@ -1,0 +1,7 @@
+Produce a diplomatic transcription of the printed historical text in this line image.
+Preserve the original spelling.
+Preserve visually meaningful historical letter forms and allographs when they can be represented in Unicode.
+Preserve abbreviations as written; do not silently expand them.
+Preserve the source word segmentation.
+Do not modernize, normalize, autocorrect, or silently complete uncertain text.
+Output ONLY the transcription.
