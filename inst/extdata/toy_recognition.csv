@@ -1,0 +1,7 @@
+document_id,line_id,system,reference,prediction
+doc1,l1,A,In principio,In principlo
+doc1,l2,A,erat verbum,erat verbum
+doc1,l1,B,In principio,In principio
+doc1,l2,B,erat verbum,erat uerbum
+doc2,l3,A,l'œuvre était finie,l'oeuvre était finie
+doc2,l3,B,l'œuvre était finie,l'œuvre était finie
