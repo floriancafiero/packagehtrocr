@@ -7,6 +7,10 @@
 #' @param system Optional system identifier.
 #' @param keep Optional character vector of additional metadata columns to carry
 #'   into the result (for example document, page, language, or script).
+#' @param keep_text Logical. If TRUE (the default), preserve the original
+#'   reference and prediction strings in standardized columns named
+#'   `reference` and `prediction`. Keeping text enables later error profiling
+#'   and exact validation of paired system comparisons.
 #' @param metrics Any of "cer" and "wer".
 #' @param char_unit "grapheme" or "codepoint".
 #' @param unicode,case,whitespace,punctuation Normalization settings.
@@ -20,6 +24,7 @@ evaluate_recognition <- function(
   id = NULL,
   system = NULL,
   keep = NULL,
+  keep_text = TRUE,
   metrics = c("cer", "wer"),
   char_unit = c("grapheme", "codepoint"),
   unicode = "NFC",
@@ -27,7 +32,13 @@ evaluate_recognition <- function(
   whitespace = "preserve",
   punctuation = "preserve"
 ) {
-  if (!is.data.frame(data)) stop("`data` must be a data frame.", call. = FALSE)
+  if (!is.data.frame(data)) {
+    stop("`data` must be a data frame.", call. = FALSE)
+  }
+
+  if (!is.logical(keep_text) || length(keep_text) != 1L || is.na(keep_text)) {
+    stop("`keep_text` must be TRUE or FALSE.", call. = FALSE)
+  }
 
   truth_name <- .resolve_column(substitute(truth), data, "truth")
   pred_name <- .resolve_column(substitute(prediction), data, "prediction")
@@ -35,20 +46,41 @@ evaluate_recognition <- function(
   system_name <- .resolve_column(if (missing(system)) NULL else substitute(system), data, "system")
 
   if (!is.null(keep)) {
-    if (!is.character(keep)) stop("`keep` must be a character vector of column names.", call. = FALSE)
+    if (!is.character(keep)) {
+      stop("`keep` must be a character vector of column names.", call. = FALSE)
+    }
     missing_keep <- setdiff(keep, names(data))
     if (length(missing_keep) > 0L) {
-      stop(sprintf("Unknown columns in `keep`: %s.", paste(missing_keep, collapse = ", ")), call. = FALSE)
+      stop(
+        sprintf(
+          "Unknown columns in `keep`: %s.",
+          paste(missing_keep, collapse = ", ")
+        ),
+        call. = FALSE
+      )
     }
   }
 
   metrics <- unique(match.arg(metrics, c("cer", "wer"), several.ok = TRUE))
   char_unit <- match.arg(char_unit)
+
+  # truth/prediction are standardized separately when keep_text = TRUE.
   base_cols <- unique(c(
     if (!is.null(id_name)) id_name,
     if (!is.null(system_name)) system_name,
     keep
   ))
+  base_cols <- setdiff(base_cols, c(truth_name, pred_name))
+
+  text_template <- if (isTRUE(keep_text)) {
+    data.frame(
+      reference = character(),
+      prediction = character(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    data.frame(stringsAsFactors = FALSE)
+  }
 
   metric_template <- data.frame(
     input_row = integer(),
@@ -64,13 +96,18 @@ evaluate_recognition <- function(
   )
 
   if (nrow(data) == 0L) {
-    result <- cbind(data[0, base_cols, drop = FALSE], metric_template)
+    result <- cbind(
+      data[0, base_cols, drop = FALSE],
+      text_template,
+      metric_template
+    )
     attr(result, "ocrinfer_policy") <- list(
       char_unit = char_unit,
       unicode = unicode,
       case = case,
       whitespace = whitespace,
-      punctuation = punctuation
+      punctuation = punctuation,
+      keep_text = keep_text
     )
     return(result)
   }
@@ -83,16 +120,28 @@ evaluate_recognition <- function(
     hyp <- data[[pred_name]][[i]]
 
     if (is.na(ref) || is.na(hyp)) {
-      stop(sprintf("Missing reference or prediction at input row %d.", i), call. = FALSE)
+      stop(
+        sprintf("Missing reference or prediction at input row %d.", i),
+        call. = FALSE
+      )
     }
 
     for (metric in metrics) {
       unit <- if (metric == "cer") char_unit else "word"
-      metric_ws <- if (metric == "wer" && whitespace == "preserve") "collapse" else whitespace
+      metric_ws <- if (metric == "wer" && whitespace == "preserve") {
+        "collapse"
+      } else {
+        whitespace
+      }
 
       counts <- edit_counts(
-        ref, hyp, unit,
-        unicode, case, metric_ws, punctuation
+        ref,
+        hyp,
+        unit,
+        unicode,
+        case,
+        metric_ws,
+        punctuation
       )
 
       rate <- if (counts$n_reference == 0L) {
@@ -114,6 +163,17 @@ evaluate_recognition <- function(
         stringsAsFactors = FALSE
       )
 
+      if (isTRUE(keep_text)) {
+        row <- cbind(
+          data.frame(
+            reference = as.character(ref),
+            prediction = as.character(hyp),
+            stringsAsFactors = FALSE
+          ),
+          row
+        )
+      }
+
       if (length(base_cols) > 0L) {
         row <- cbind(data[i, base_cols, drop = FALSE], row)
       }
@@ -130,7 +190,8 @@ evaluate_recognition <- function(
     unicode = unicode,
     case = case,
     whitespace = whitespace,
-    punctuation = punctuation
+    punctuation = punctuation,
+    keep_text = keep_text
   )
   result
 }
