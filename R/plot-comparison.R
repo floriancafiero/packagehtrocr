@@ -43,11 +43,11 @@ plot_comparison <- function(x, percent = TRUE) {
 
   ggplot2::ggplot(
     plot_data,
-    ggplot2::aes(x = metric, y = difference_plot)
+    ggplot2::aes(x = .data[["metric"]], y = .data[["difference_plot"]])
   ) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2) +
     ggplot2::geom_errorbar(
-      ggplot2::aes(ymin = conf_low_plot, ymax = conf_high_plot),
+      ggplot2::aes(ymin = .data[["conf_low_plot"]], ymax = .data[["conf_high_plot"]]),
       width = 0.15
     ) +
     ggplot2::geom_point(size = 2.5) +
