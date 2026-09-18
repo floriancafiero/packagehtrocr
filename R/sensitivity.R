@@ -36,6 +36,8 @@ normalization_sensitivity <- function(
   averaging = c("micro", "macro"),
   unit = NULL
 ) {
+  averaging <- match.arg(averaging)
+
   if (missing(policies) || !is.list(policies) || length(policies) == 0L) {
     stop("`policies` must be a non-empty named list.", call. = FALSE)
   }
@@ -111,7 +113,7 @@ normalization_sensitivity <- function(
       result <- summarise_recognition(
         result,
         by = summary_by,
-        averaging = match.arg(averaging),
+        averaging = averaging,
         unit = unit
       )
 
