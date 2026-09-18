@@ -5,10 +5,13 @@
 #' @param prediction Unquoted column name or string identifying recognition output.
 #' @param id Optional unit identifier.
 #' @param system Optional system identifier.
+#' @param keep Optional character vector of additional metadata columns to carry
+#'   into the result (for example document, page, language, or script).
 #' @param metrics Any of "cer" and "wer".
 #' @param char_unit "grapheme" or "codepoint".
 #' @param unicode,case,whitespace,punctuation Normalization settings.
-#' @return Long-form data frame of rates and edit counts.
+#' @return Long-form data frame of rates and edit counts. The evaluation policy
+#'   is stored in the "ocrinfer_policy" attribute.
 #' @export
 evaluate_recognition <- function(
   data,
@@ -16,6 +19,7 @@ evaluate_recognition <- function(
   prediction,
   id = NULL,
   system = NULL,
+  keep = NULL,
   metrics = c("cer", "wer"),
   char_unit = c("grapheme", "codepoint"),
   unicode = "NFC",
@@ -30,19 +34,47 @@ evaluate_recognition <- function(
   id_name <- .resolve_column(if (missing(id)) NULL else substitute(id), data, "id")
   system_name <- .resolve_column(if (missing(system)) NULL else substitute(system), data, "system")
 
-  metrics <- unique(match.arg(metrics, c("cer", "wer"), several.ok = TRUE))
-  char_unit <- match.arg(char_unit)
-
-  if (nrow(data) == 0L) {
-    return(data.frame(
-      input_row = integer(), metric = character(), rate = numeric(),
-      n_reference = integer(), n_hypothesis = integer(),
-      substitutions = integer(), deletions = integer(),
-      insertions = integer(), distance = integer()
-    ))
+  if (!is.null(keep)) {
+    if (!is.character(keep)) stop("`keep` must be a character vector of column names.", call. = FALSE)
+    missing_keep <- setdiff(keep, names(data))
+    if (length(missing_keep) > 0L) {
+      stop(sprintf("Unknown columns in `keep`: %s.", paste(missing_keep, collapse = ", ")), call. = FALSE)
+    }
   }
 
-  base_cols <- c(if (!is.null(id_name)) id_name, if (!is.null(system_name)) system_name)
+  metrics <- unique(match.arg(metrics, c("cer", "wer"), several.ok = TRUE))
+  char_unit <- match.arg(char_unit)
+  base_cols <- unique(c(
+    if (!is.null(id_name)) id_name,
+    if (!is.null(system_name)) system_name,
+    keep
+  ))
+
+  metric_template <- data.frame(
+    input_row = integer(),
+    metric = character(),
+    rate = numeric(),
+    n_reference = integer(),
+    n_hypothesis = integer(),
+    substitutions = integer(),
+    deletions = integer(),
+    insertions = integer(),
+    distance = integer(),
+    stringsAsFactors = FALSE
+  )
+
+  if (nrow(data) == 0L) {
+    result <- cbind(data[0, base_cols, drop = FALSE], metric_template)
+    attr(result, "ocrinfer_policy") <- list(
+      char_unit = char_unit,
+      unicode = unicode,
+      case = case,
+      whitespace = whitespace,
+      punctuation = punctuation
+    )
+    return(result)
+  }
+
   out <- vector("list", nrow(data) * length(metrics))
   k <- 1L
 
@@ -93,5 +125,12 @@ evaluate_recognition <- function(
 
   result <- do.call(rbind, out)
   rownames(result) <- NULL
+  attr(result, "ocrinfer_policy") <- list(
+    char_unit = char_unit,
+    unicode = unicode,
+    case = case,
+    whitespace = whitespace,
+    punctuation = punctuation
+  )
   result
 }
