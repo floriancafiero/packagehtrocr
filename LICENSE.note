@@ -1,0 +1,14 @@
+The R source code in this package is licensed under the MIT License.
+
+The text-only CATMuS fixtures under inst/extdata/ contain excerpts derived from
+CATMuS Medieval Samples / CATMuS Medieval and are distributed under the terms
+of the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+
+Source:
+https://huggingface.co/datasets/CATMuS/medieval-samples
+https://huggingface.co/datasets/CATMuS/medieval
+
+The controlled prediction fixture contains transformations of those public
+transcriptions and is not OCR/HTR model output.
+
+See inst/extdata/CATMUS_ATTRIBUTION.md for attribution and methodological notes.
