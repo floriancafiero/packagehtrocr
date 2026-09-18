@@ -16,6 +16,12 @@ from .evaluation import (
 from .compare import compare_systems
 from .diagnostics import extract_error_spans, error_profile, confusion_table
 from .policy import policy_swap_summary
+from .annotation import (
+    fidelity_codebook,
+    fidelity_profile,
+    prepare_fidelity_annotation,
+)
+from .agreement import fidelity_agreement
 
 __all__ = [
     "AlignmentRow",
@@ -34,4 +40,8 @@ __all__ = [
     "error_profile",
     "confusion_table",
     "policy_swap_summary",
+    "fidelity_codebook",
+    "fidelity_profile",
+    "prepare_fidelity_annotation",
+    "fidelity_agreement",
 ]
