@@ -1,0 +1,58 @@
+---
+title: "Evaluating OCR and HTR with ocrinfer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Evaluating OCR and HTR with ocrinfer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(ocrinfer)
+```
+
+## One pair of strings
+
+```{r}
+cer("In principio", "In principlo")
+wer("erat verbum", "erat uerbum")
+
+align_text(
+  "In principio",
+  "In principlo",
+  unit = "grapheme"
+)
+```
+
+## Why Unicode normalization matters
+
+The visible character é can be represented in more than one Unicode form.
+By default, `ocrinfer` applies NFC before evaluation.
+
+```{r}
+composed <- "\u00e9"
+decomposed <- "e\u0301"
+
+cer(composed, decomposed, unicode = "none")
+cer(composed, decomposed, unicode = "NFC")
+```
+
+## A table of predictions
+
+```{r}
+predictions <- data.frame(
+  line_id = c("l1", "l2"),
+  system = c("A", "A"),
+  reference = c("In principio", "erat verbum"),
+  hypothesis = c("In principlo", "erat uerbum")
+)
+
+evaluate_recognition(
+  predictions,
+  truth = reference,
+  prediction = hypothesis,
+  id = line_id,
+  system = system
+)
+```
