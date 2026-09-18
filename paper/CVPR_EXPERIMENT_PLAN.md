@@ -102,7 +102,7 @@ Why:
 - German Fraktur and Early Modern Latin;
 - 15th–19th century material;
 - diplomatic-style transcriptions preserving historical character forms;
-- CC-BY 4.0;
+- upstream Zenodo README states CC BY-SA 4.0 (the publication describes CC BY 4.0); treat the archive as CC BY-SA unless clarified;
 - print rather than handwriting, giving a genuine visual-domain shift from
   CMMHWR26;
 - not listed among the MEDUSA 0.1 training datasets.
