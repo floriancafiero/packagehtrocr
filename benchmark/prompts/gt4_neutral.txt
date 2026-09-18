@@ -1,0 +1,2 @@
+Transcribe the printed historical text in this line image.
+Output ONLY the transcription.
